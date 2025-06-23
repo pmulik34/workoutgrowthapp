@@ -67,12 +67,86 @@ export const workoutData = {
   },
   Saturday: {
     title: "Active Recovery",
+    type: "recovery",
+    instructions: {
+      description: "Active recovery helps your body heal while keeping you moving. Focus on low-intensity activities that promote blood flow and flexibility.",
+      activities: [
+        {
+          name: "Light Walking",
+          duration: "20-30 minutes",
+          description: "Take a gentle walk outdoors or on a treadmill at a comfortable pace",
+          benefits: "Improves circulation and aids muscle recovery"
+        },
+        {
+          name: "Gentle Yoga",
+          duration: "15-25 minutes", 
+          description: "Focus on slow, gentle movements and deep breathing",
+          benefits: "Reduces muscle tension and improves flexibility"
+        },
+        {
+          name: "Light Stretching",
+          duration: "10-15 minutes",
+          description: "Target areas that feel tight from the week's workouts",
+          benefits: "Prevents stiffness and maintains mobility"
+        },
+        {
+          name: "Foam Rolling",
+          duration: "10-15 minutes",
+          description: "Gently roll out tight muscles and trigger points",
+          benefits: "Releases muscle tension and improves recovery"
+        }
+      ],
+      tips: [
+        "Listen to your body - if something hurts, back off",
+        "Stay hydrated throughout the day",
+        "Focus on quality sleep (7-9 hours)",
+        "Eat nutritious foods to support recovery",
+        "Avoid high-intensity activities today"
+      ]
+    },
     exercises: [
       { name: "Rest Day", reps: "Active walk or Yoga", link: "https://www.youtube.com/results?search_query=light+yoga+for+teenagers" }
     ]
   },
   Sunday: {
     title: "Mindful Movement",
+    type: "recovery",
+    instructions: {
+      description: "Mindful movement combines gentle physical activity with mental awareness. Today is about connecting with your body and preparing for the week ahead.",
+      activities: [
+        {
+          name: "Mindful Walking",
+          duration: "15-30 minutes",
+          description: "Walk slowly while focusing on your breath and surroundings",
+          benefits: "Reduces stress and improves mental clarity"
+        },
+        {
+          name: "Mobility Flow",
+          duration: "20-30 minutes",
+          description: "Gentle movements that take your joints through their full range of motion",
+          benefits: "Maintains joint health and prevents stiffness"
+        },
+        {
+          name: "Breathing Exercises",
+          duration: "5-10 minutes",
+          description: "Practice deep breathing techniques to calm your mind",
+          benefits: "Reduces stress and improves focus"
+        },
+        {
+          name: "Fun Activity",
+          duration: "30+ minutes",
+          description: "Choose something you enjoy - dancing, playing sports, swimming",
+          benefits: "Boosts mood and keeps movement enjoyable"
+        }
+      ],
+      tips: [
+        "Move at your own pace without pushing yourself",
+        "Focus on how your body feels during movement",
+        "Try something new and fun",
+        "Use this time to relax and recharge",
+        "Prepare mentally for the upcoming week"
+      ]
+    },
     exercises: [
       { name: "Rest Day", reps: "Fun activity or mobility flow", link: "https://www.youtube.com/results?search_query=mobility+flow+for+growth" }
     ]

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './WorkoutPage.css';
 import { workoutData } from '../WorkoutData.js';
-import WorkoutDetailPage from './WorkoutDetailPage.jsx';
 
 // Import workout images
 import upperBodyImg from '../assets/upperbody.jpeg';
@@ -11,11 +11,11 @@ import flexibilityImg from '../assets/flexibility.jpeg';
 import muscleImg from '../assets/muscle.png';
 
 const WorkoutPage = () => {
-  const [selectedDay, setSelectedDay] = useState(null);
+  const navigate = useNavigate();
 
   // Get current day
   const currentDay = new Date().toLocaleDateString('en-US', { weekday: 'long' });
-  const userName = "Imran"; // You can make this dynamic later
+  const userName = "John Doe"; // You can make this dynamic later
 
   // Get current day's exercises
   const todaysExercises = workoutData[currentDay]?.exercises || [];
@@ -93,40 +93,15 @@ const WorkoutPage = () => {
     }
   };
 
-  // Get workout duration estimate
-  const getWorkoutDuration = (day) => {
-    const dayData = workoutData[day];
-    if (!dayData || !dayData.exercises || dayData.exercises.length === 0) return '0 Min';
-    
-    // Estimate 2-3 minutes per exercise
-    const duration = dayData.exercises.length * 2.5;
-    return `${Math.round(duration)} Min`;
-  };
-
-  // Handle card click to show detail page
+  // Handle card click to navigate to detail page
   const handleCardClick = (day) => {
-    setSelectedDay(day);
-  };
-
-  // Handle back from detail page
-  const handleBackFromDetail = () => {
-    setSelectedDay(null);
+    navigate(`/workout/${day.toLowerCase()}`);
   };
 
   // Handle start workout click
   const handleStartWorkout = () => {
-    setSelectedDay(currentDay);
+    navigate(`/workout/${currentDay.toLowerCase()}`);
   };
-
-  // If a day is selected, show the detail page
-  if (selectedDay) {
-    return (
-      <WorkoutDetailPage 
-        selectedDay={selectedDay} 
-        onBack={handleBackFromDetail}
-      />
-    );
-  }
 
   return (
     <div className="workout-page">
@@ -144,8 +119,7 @@ const WorkoutPage = () => {
         <div className="workout-widget-content">
           <div className="workout-widget-info">
             <h3>{currentDay}</h3>
-            <p className="workout-type-main">{getTodaysWorkoutTitle()}</p>
-            <p className="workout-duration">{getWorkoutDuration(currentDay)}</p>
+            <p className="workout-type-main">{getTodaysWorkoutTitle()}</p>        
           </div>
         </div>
         <button className="start-workout-btn" onClick={handleStartWorkout}>
@@ -174,7 +148,7 @@ const WorkoutPage = () => {
                 </div>
                 <div className="exercise-card-details">
                   <span className="exercise-count">{workoutData[day]?.exercises?.length || 0} exercises</span>
-                  <span className="exercise-duration">{getWorkoutDuration(day)}</span>
+                  {/* Duration removed from all cards */}
                 </div>
               </div>
             </div>

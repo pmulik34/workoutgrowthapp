@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import SplashScreen from './components/SplashScreen';
 import WorkoutPage from './components/WorkoutPage';
+import WorkoutDetailPage from './components/WorkoutDetailPage';
 import DietPage from './components/DietPage';
 import ProgressPage from './components/ProgressPage';
 import ProfilePage from './components/ProfilePage';
@@ -9,7 +11,6 @@ import './App.css';
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
-  const [activeTab, setActiveTab] = useState('workout');
   const [appData, setAppData] = useState(null);
 
   // Load data from localStorage on app start
@@ -21,7 +22,7 @@ function App() {
       // Initialize with default data
       const defaultData = {
         user: {
-          name: 'Imran',
+          name: 'John Doe',
           currentStreak: 0,
           totalWorkouts: 0
         },
@@ -29,8 +30,7 @@ function App() {
           theme: 'dark',
           notifications: true
         },
-        workoutHistory: [],
-        currentTab: 'workout'
+        workoutHistory: []
       };
       setAppData(defaultData);
       localStorage.setItem('workoutAppData', JSON.stringify(defaultData));
@@ -42,20 +42,6 @@ function App() {
     setShowSplash(false);
   };
 
-  // Handle tab change
-  const handleTabChange = (tabId) => {
-    setActiveTab(tabId);
-    // Save current tab to localStorage
-    if (appData) {
-      const updatedData = {
-        ...appData,
-        currentTab: tabId
-      };
-      setAppData(updatedData);
-      localStorage.setItem('workoutAppData', JSON.stringify(updatedData));
-    }
-  };
-
   // Save data to localStorage whenever appData changes
   useEffect(() => {
     if (appData) {
@@ -63,43 +49,29 @@ function App() {
     }
   }, [appData]);
 
-  // Load saved tab on app start
-  useEffect(() => {
-    if (appData && appData.currentTab) {
-      setActiveTab(appData.currentTab);
-    }
-  }, [appData]);
-
-  // Render current page based on active tab
-  const renderCurrentPage = () => {
-    switch (activeTab) {
-      case 'workout':
-        return <WorkoutPage />;
-      case 'diet':
-        return <DietPage />;
-      case 'progress':
-        return <ProgressPage />;
-      case 'profile':
-        return <ProfilePage />;
-      default:
-        return <WorkoutPage />;
-    }
-  };
-
   if (showSplash) {
     return <SplashScreen onNext={handleSplashComplete} />;
   }
 
   return (
-    <div className="app">
-      <div className="app-main-content">
-        {renderCurrentPage()}
+    <Router>
+      <div className="app">
+        <div className="app-main-content">
+          <Routes>
+            {/* Main navigation routes */}
+            <Route path="/" element={<Navigate to="/workout" replace />} />
+            <Route path="/workout" element={<WorkoutPage />} />
+            <Route path="/workout/:day" element={<WorkoutDetailPage />} />
+            <Route path="/diet" element={<DietPage />} />
+            <Route path="/progress" element={<ProgressPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            {/* Catch all route - redirect to workout */}
+            <Route path="*" element={<Navigate to="/workout" replace />} />
+          </Routes>
+        </div>
+        <BottomNavigation />
       </div>
-      <BottomNavigation 
-        activeTab={activeTab} 
-        onTabChange={handleTabChange} 
-      />
-    </div>
+    </Router>
   );
 }
 
