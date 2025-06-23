@@ -1,0 +1,144 @@
+.bottom-navigation {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 80px;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 1rem;
+  z-index: 1000;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.nav-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  min-width: 60px;
+  height: 60px;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nav-tab:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--accent-green);
+}
+
+.nav-tab:hover .nav-icon-img {
+  filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
+}
+
+.nav-tab.active {
+  color: var(--accent-green);
+  background: rgba(181, 255, 67, 0.1);
+}
+
+.nav-tab.active .nav-icon {
+  transform: scale(1.1);
+}
+
+.nav-tab.active .nav-icon-img {
+  filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
+}
+
+.nav-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  transition: transform 0.3s ease;
+}
+
+.nav-icon-img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  transition: all 0.3s ease;
+  filter: brightness(0) saturate(100%) invert(70%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(70%) contrast(100%);
+}
+
+.nav-tab:hover:active .nav-icon-img {
+  filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
+}
+
+.nav-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: capitalize;
+  line-height: 1;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+  .bottom-navigation {
+    height: 75px;
+    padding: 0 0.5rem;
+  }
+  
+  .nav-tab {
+    min-width: 55px;
+    height: 55px;
+    padding: 0.3rem;
+  }
+  
+  .nav-icon-img {
+    width: 22px;
+    height: 22px;
+  }
+  
+  .nav-label {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 380px) {
+  .bottom-navigation {
+    height: 70px;
+    padding: 0 0.3rem;
+  }
+  
+  .nav-tab {
+    min-width: 50px;
+    height: 50px;
+  }
+  
+  .nav-icon-img {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .nav-label {
+    font-size: 9px;
+  }
+}
+
+/* Safe area for devices with home indicator */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .bottom-navigation {
+    padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
+    height: calc(80px + env(safe-area-inset-bottom));
+  }
+}
+
+/* Prevent text selection */
+.bottom-navigation * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+} 

@@ -1,0 +1,269 @@
+.profile-page {
+  background: #000000;
+  color: #FFFFFF;
+  min-height: 100vh;
+  font-family: 'Poppins', sans-serif;
+  padding: 2rem 1.5rem;
+  padding-bottom: 8rem; /* Space for bottom navigation */
+}
+
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.page-header h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin: 0 0 0.5rem 0;
+  color: #FFFFFF;
+  line-height: 1.2;
+}
+
+.page-header p {
+  font-size: 1rem;
+  color: #FFFFFF;
+  opacity: 0.8;
+  margin: 0;
+  font-weight: 400;
+}
+
+.profile-section {
+  margin-bottom: 2rem;
+}
+
+.profile-section h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.profile-card {
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.profile-avatar {
+  flex-shrink: 0;
+}
+
+.avatar-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--accent-green);
+}
+
+.profile-info h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.3rem 0;
+}
+
+.profile-info p {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin: 0 0 1rem 0;
+}
+
+.profile-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.profile-stats span {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.settings-list {
+  background: var(--bg-card);
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+}
+
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.setting-item:last-child {
+  border-bottom: none;
+}
+
+.setting-info h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.3rem 0;
+}
+
+.setting-info p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.setting-toggle {
+  position: relative;
+}
+
+.setting-toggle input {
+  display: none;
+}
+
+.toggle-label {
+  width: 50px;
+  height: 26px;
+  background: var(--bg-secondary);
+  border-radius: 13px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  display: block;
+}
+
+.toggle-label::after {
+  content: '';
+  width: 22px;
+  height: 22px;
+  background: var(--text-primary);
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s ease;
+}
+
+.setting-toggle input:checked + .toggle-label {
+  background: var(--accent-green);
+}
+
+.setting-toggle input:checked + .toggle-label::after {
+  transform: translateX(24px);
+  background: #000000;
+}
+
+.account-list {
+  background: var(--bg-card);
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+}
+
+.account-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.account-item:last-child {
+  border-bottom: none;
+}
+
+.account-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.account-item span {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.account-item.logout span {
+  color: #ef4444;
+}
+
+.account-item svg {
+  color: var(--text-secondary);
+}
+
+.account-item.logout svg {
+  color: #ef4444;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .profile-page {
+    padding: 1.5rem 1rem;
+    padding-bottom: 7rem;
+  }
+  
+  .profile-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+  
+  .profile-info {
+    text-align: center;
+  }
+  
+  .profile-stats {
+    align-items: center;
+  }
+  
+  .page-header h1 {
+    font-size: 2rem;
+  }
+  
+  .page-header p {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-page {
+    padding: 1rem 0.8rem;
+    padding-bottom: 7rem;
+  }
+  
+  .profile-card {
+    padding: 1.2rem;
+  }
+  
+  .avatar-img {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .setting-item {
+    padding: 1.2rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .setting-toggle {
+    align-self: flex-end;
+  }
+  
+  .account-item {
+    padding: 1rem 1.2rem;
+  }
+  
+  .page-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .page-header p {
+    font-size: 0.85rem;
+  }
+} 

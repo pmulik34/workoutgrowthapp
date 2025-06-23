@@ -1,0 +1,257 @@
+/* Reset and base styles */
+.splash-screen {
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.workout-bg-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.splash-content {
+  position: relative;
+  z-index: 2;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1.5rem;
+  background: linear-gradient(
+    180deg, 
+    rgba(0, 0, 0, 0.6) 0%, 
+    rgba(0, 0, 0, 0.4) 40%, 
+    rgba(0, 0, 0, 0.7) 100%
+  );
+  box-sizing: border-box;
+}
+
+.hero-section {
+  flex: 1;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  padding: 0 1rem;
+  min-height: 0;
+  margin-top: 8rem;
+}
+
+.hero-title {
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--text-primary);
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+  margin: 0;
+  padding: 0;
+  max-width: 100%;
+  word-wrap: break-word;
+  font-size: 3rem;
+}
+
+.hero-title .highlight {
+  background: var(--accent-green);
+  color: #000000;
+  padding: 0.4rem 1rem;
+  border-radius: 15px;
+  font-weight: 800;
+  display: inline-block;
+  margin-left: 0.5rem;
+  box-shadow: 0 4px 15px rgba(57, 255, 20, 0.4);
+  transform: rotate(6deg);
+  position: relative;
+  margin-top: 1rem;
+  white-space: nowrap;
+}
+
+.hero-image {
+  width: 280px;
+  height: 350px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  position: relative;
+}
+
+.workout-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.action-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 1rem;
+  flex-shrink: 0;
+}
+
+.get-started-btn {
+  background: var(--accent-green);
+  border: none;
+  border-radius: 50px;
+  padding: 1.2rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #000000;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(57, 255, 20, 0.4);
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 400px;
+  min-height: 56px;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.get-started-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(57, 255, 20, 0.5);
+}
+
+.get-started-btn:active {
+  transform: translateY(-1px);
+}
+
+.get-started-btn .btn-text {
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  font-size: 1.1rem;
+}
+
+.get-started-btn .btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+.get-started-btn:hover .btn-icon {
+  transform: translateX(4px);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .splash-content {
+    padding: 1.5rem 1rem;
+  }
+  
+  /* .hero-title {
+    font-size: clamp(1.8rem, 7vw, 3rem);
+  } */
+  
+  .hero-section {
+    padding: 0 0.5rem;
+  }
+  
+  .action-section {
+    padding: 1.5rem 1rem;
+  }
+  
+  .get-started-btn {
+    padding: 1.1rem 2rem;
+    font-size: 1.1rem;
+    width: 100%;
+    max-width: 350px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* .hero-title {
+    font-size: clamp(1.6rem, 6vw, 2.5rem);
+  } */
+  
+  .hero-title .highlight {
+    padding: 0.3rem 0.8rem;
+    border-radius: 12px;
+    margin-left: 0.3rem;
+  }
+  
+  .action-section {
+    padding: 1.5rem 0.8rem;
+  }
+  
+  .get-started-btn {
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    width: 100%;
+    max-width: none;
+  }
+}
+
+@media (max-width: 380px) {
+  /* .hero-title {
+    font-size: clamp(1.5rem, 5.5vw, 2.2rem);
+  } */
+  
+  .splash-content {
+    padding: 1rem 0.8rem;
+  }
+  
+  .hero-section {
+    padding: 0 0.3rem;
+  }
+  
+  .action-section {
+    padding: 1.5rem 0.5rem;
+  }
+  
+  .get-started-btn {
+    padding: 1rem 1.3rem;
+    font-size: 0.95rem;
+    width: 100%;
+  }
+}
+
+/* Landscape orientation adjustments */
+@media (orientation: landscape) and (max-height: 600px) {
+  /* .hero-title {
+    font-size: clamp(1.5rem, 5vw, 2.8rem);
+  }
+   */
+  .splash-content {
+    padding: 1rem;
+  }
+  
+  .action-section {
+    padding: 1rem;
+  }
+  
+  .hero-section {
+    justify-content: center;
+  }
+}
+
+/* Prevent text selection and improve performance */
+.splash-screen * {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+} 
