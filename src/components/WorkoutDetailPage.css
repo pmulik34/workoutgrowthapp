@@ -81,7 +81,7 @@
 .workout-detail-subtitle {
   font-size: 1.1rem;
   color: #CDFB47;
-  margin: 0;
+  margin: 0 0 1rem 0;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -91,6 +91,35 @@
   border: 1px solid rgba(205, 251, 71, 0.3);
   backdrop-filter: blur(10px);
   box-shadow: 0 2px 8px rgba(205, 251, 71, 0.1);
+}
+
+/* Day Status Indicators */
+.day-status {
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.day-status.future {
+  background: rgba(100, 150, 255, 0.1);
+  color: #6496ff;
+  border: 1px solid rgba(100, 150, 255, 0.3);
+}
+
+.day-status.locked {
+  background: rgba(255, 100, 100, 0.1);
+  color: #ff6464;
+  border: 1px solid rgba(255, 100, 100, 0.3);
+}
+
+.day-status.completed {
+  background: rgba(205, 251, 71, 0.1);
+  color: #CDFB47;
+  border: 1px solid rgba(205, 251, 71, 0.3);
 }
 
 /* Workout Content */
@@ -191,6 +220,103 @@
 .exercise-item.completed .exercise-duration {
   background: rgba(205, 251, 71, 0.2);
   border-color: rgba(205, 251, 71, 0.4);
+}
+
+/* Locked Exercise Items */
+.exercise-item.locked {
+  opacity: 0.6;
+  background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
+  border-color: rgba(150, 150, 150, 0.2);
+  cursor: not-allowed;
+}
+
+.exercise-item.locked:hover {
+  transform: none;
+  border-color: rgba(150, 150, 150, 0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.exercise-item.locked .exercise-name {
+  color: #888888;
+}
+
+.exercise-item.locked .exercise-duration {
+  background: rgba(150, 150, 150, 0.1);
+  border-color: rgba(150, 150, 150, 0.2);
+  color: #888888;
+}
+
+.checkbox-label.disabled {
+  cursor: not-allowed;
+}
+
+.checkbox-label.disabled .checkbox-custom {
+  background: rgba(150, 150, 150, 0.1);
+  border-color: rgba(150, 150, 150, 0.3);
+}
+
+/* Future Day Message */
+.future-day-message {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border: 2px solid rgba(100, 150, 255, 0.3);
+  border-radius: 20px;
+  padding: 2rem;
+  margin: 2rem 0;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(100, 150, 255, 0.1);
+}
+
+.future-content h2 {
+  color: #6496ff;
+  font-size: 1.8rem;
+  margin: 0 0 1rem 0;
+  font-weight: 700;
+}
+
+.future-content p {
+  color: #B0B0B0;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin: 0 0 1.5rem 0;
+}
+
+.future-preview {
+  background: rgba(100, 150, 255, 0.1);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.future-preview h3 {
+  color: #6496ff;
+  font-size: 1.2rem;
+  margin: 0 0 1rem 0;
+  font-weight: 600;
+}
+
+.future-preview ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.future-preview li {
+  color: #FFFFFF;
+  font-size: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(100, 150, 255, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.future-preview li:last-child {
+  border-bottom: none;
+}
+
+.future-preview li::before {
+  content: '📋';
+  font-size: 0.9rem;
 }
 
 .exercise-info {

@@ -107,7 +107,7 @@ const WorkoutPage = () => {
     <div className="workout-page">
       {/* Greeting Section */}
       <div className="greeting-section">
-        <h1>Hi, {userName}! 👋</h1>
+        <h1>Hi! 👋</h1>
         <p className="tagline">Make your body perfect!</p>
       </div>
 
