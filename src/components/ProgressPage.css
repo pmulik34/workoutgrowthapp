@@ -429,7 +429,7 @@
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .progress-page {
-    padding: 0.5rem;
+    padding: 1.5rem;
     padding-bottom: 6rem;
   }
 
