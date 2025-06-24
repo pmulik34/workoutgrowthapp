@@ -122,6 +122,13 @@
   border: 1px solid rgba(205, 251, 71, 0.3);
 }
 
+.day-status.today {
+  background: rgba(205, 251, 71, 0.15);
+  color: #CDFB47;
+  border: 1px solid rgba(205, 251, 71, 0.4);
+  box-shadow: 0 0 10px rgba(205, 251, 71, 0.2);
+}
+
 /* Workout Content */
 .workout-detail-content {
   margin-bottom: 2rem;
@@ -224,26 +231,26 @@
 
 /* Locked Exercise Items */
 .exercise-item.locked {
-  opacity: 0.6;
-  background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
-  border-color: rgba(150, 150, 150, 0.2);
-  cursor: not-allowed;
+  background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%);
+  border-color: transparent;
+  cursor: default;
 }
 
 .exercise-item.locked:hover {
-  transform: none;
-  border-color: rgba(150, 150, 150, 0.2);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  border-color: rgba(205, 251, 71, 0.3);
+  background: linear-gradient(135deg, #2d2d2d 0%, #3a3a3a 100%);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 32px rgba(205, 251, 71, 0.15);
 }
 
 .exercise-item.locked .exercise-name {
-  color: #888888;
+  color: #FFFFFF;
 }
 
 .exercise-item.locked .exercise-duration {
-  background: rgba(150, 150, 150, 0.1);
-  border-color: rgba(150, 150, 150, 0.2);
-  color: #888888;
+  background: rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
 }
 
 .checkbox-label.disabled {
@@ -251,8 +258,8 @@
 }
 
 .checkbox-label.disabled .checkbox-custom {
-  background: rgba(150, 150, 150, 0.1);
-  border-color: rgba(150, 150, 150, 0.3);
+  background: rgba(60, 60, 60, 0.8);
+  border-color: rgba(120, 120, 120, 0.5);
 }
 
 /* Future Day Message */

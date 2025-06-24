@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './WorkoutPage.css';
 import { workoutData } from '../WorkoutData.js';
@@ -12,10 +12,89 @@ import muscleImg from '../assets/muscle.png';
 
 const WorkoutPage = () => {
   const navigate = useNavigate();
+  const [weeklyProgress, setWeeklyProgress] = useState({});
 
   // Get current day
   const currentDay = new Date().toLocaleDateString('en-US', { weekday: 'long' });
   const userName = "John Doe"; // You can make this dynamic later
+
+  // Load weekly progress from localStorage
+  useEffect(() => {
+    const loadWeeklyProgress = () => {
+      const workoutStorage = JSON.parse(localStorage.getItem('workoutAppStorage')) || {};
+      console.log('WorkoutPage: Loading progress data:', workoutStorage.dailyProgress);
+      setWeeklyProgress(workoutStorage.dailyProgress || {});
+    };
+
+    // Load immediately when component mounts
+    loadWeeklyProgress();
+    
+    // Set up interval to check for updates every 500ms when component is active
+    const interval = setInterval(loadWeeklyProgress, 500);
+    
+    // Listen for storage changes to update progress in real-time
+    const handleStorageChange = () => {
+      console.log('Storage changed, reloading progress');
+      loadWeeklyProgress();
+    };
+
+    // Listen for focus events to reload when returning to tab
+    const handleFocus = () => {
+      console.log('Window focused, reloading progress');
+      loadWeeklyProgress();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('focus', handleFocus);
+    
+    // Also check for updates when component becomes visible
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        console.log('Page became visible, reloading progress');
+        loadWeeklyProgress();
+      }
+    });
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('focus', handleFocus);
+      document.removeEventListener('visibilitychange', loadWeeklyProgress);
+    };
+  }, []);
+
+  // Also reload when component re-mounts or updates
+  useEffect(() => {
+    const workoutStorage = JSON.parse(localStorage.getItem('workoutAppStorage')) || {};
+    setWeeklyProgress(workoutStorage.dailyProgress || {});
+  }, [currentDay]); // Reload when day changes
+
+  // Get day progress key
+  const getDayProgressKey = (dayName) => {
+    const today = new Date();
+    const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    return `${todayKey}_${dayName}`;
+  };
+
+  // Get progress for a specific day
+  const getDayProgress = (dayName) => {
+    const progressKey = getDayProgressKey(dayName);
+    return weeklyProgress[progressKey] || {
+      progress: 0,
+      completedExercises: 0,
+      totalExercises: calculateTotalExercises(dayName),
+      isCompleted: false
+    };
+  };
+
+  // Calculate total exercises for a day
+  const calculateTotalExercises = (dayName) => {
+    const dayData = workoutData[dayName];
+    if (dayData?.type === 'recovery') return 0;
+    
+    const warmupData = workoutData.Warmup;
+    return (warmupData?.exercises?.length || 0) + (dayData?.exercises?.length || 0);
+  };
 
   // Get current day's exercises
   const todaysExercises = workoutData[currentDay]?.exercises || [];
@@ -93,6 +172,22 @@ const WorkoutPage = () => {
     }
   };
 
+  // Get day status class
+  const getDayStatusClass = (day) => {
+    const workoutDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    const todayIndex = workoutDays.indexOf(currentDay);
+    const dayIndex = workoutDays.indexOf(day);
+    
+    if (day === currentDay) {
+      return 'current-day';
+    } else if (dayIndex < todayIndex) {
+      return 'past-day';
+    } else if (dayIndex > todayIndex) {
+      return 'future-day';
+    }
+    return '';
+  };
+
   // Handle card click to navigate to detail page
   const handleCardClick = (day) => {
     navigate(`/workout/${day.toLowerCase()}`);
@@ -119,7 +214,13 @@ const WorkoutPage = () => {
         <div className="workout-widget-content">
           <div className="workout-widget-info">
             <h3>{currentDay}</h3>
-            <p className="workout-type-main">{getTodaysWorkoutTitle()}</p>        
+            <p className="workout-type-main">{getTodaysWorkoutTitle()}</p>
+            {/* Show today's progress */}
+            {getDayProgress(currentDay).totalExercises > 0 && (
+              <div className="today-progress">
+                {getDayProgress(currentDay).completedExercises}/{getDayProgress(currentDay).totalExercises} exercises • {getDayProgress(currentDay).progress}%
+              </div>
+            )}
           </div>
         </div>
         <button className="start-workout-btn" onClick={handleStartWorkout}>
@@ -131,28 +232,49 @@ const WorkoutPage = () => {
       <div className="weekly-exercises">
         <h2>Weekly Exercises</h2>
         <div className="exercise-cards-container">
-          {getAllDays().map((day) => (
-            <div 
-              key={day} 
-              className={`exercise-card ${day === currentDay ? 'current-day' : ''}`}
-              style={{ backgroundImage: `url(${getWorkoutImage(day)})` }}
-              onClick={() => handleCardClick(day)}
-            >
-              <div className="exercise-card-overlay"></div>
-              <div className="exercise-card-content">
-                <div className="exercise-card-header">
-                  <div className="exercise-card-info">
-                    <h4>{day}</h4>
-                    <p className="exercise-card-type">{getDayWorkoutSummary(day)}</p>
+          {getAllDays().map((day) => {
+            const dayProgress = getDayProgress(day);
+            return (
+              <div 
+                key={day} 
+                className={`exercise-card ${getDayStatusClass(day)}`}
+                style={{ backgroundImage: `url(${getWorkoutImage(day)})` }}
+                onClick={() => handleCardClick(day)}
+              >
+                <div className="exercise-card-overlay"></div>
+                <div className="exercise-card-content">
+                  <div className="exercise-card-header">
+                    <div className="exercise-card-info">
+                      <h4>{day}</h4>
+                      <p className="exercise-card-type">{getDayWorkoutSummary(day)}</p>
+                    </div>
+                    {day !== currentDay && (
+                      <div className="day-status-icon">
+                        {getDayStatusClass(day) === 'past-day' ? '🔒' : '🔮'}
+                      </div>
+                    )}
+                    {dayProgress.isCompleted && (
+                      <div className="completion-badge">✅</div>
+                    )}
+                  </div>
+                  <div className="exercise-card-details">
+                    <span className="exercise-count">{dayProgress.totalExercises} exercises</span>
+                    {dayProgress.totalExercises > 0 && (
+                      <div className="progress-indicator">
+                        <div className="mini-progress-bar">
+                          <div 
+                            className="mini-progress-fill" 
+                            style={{ width: `${dayProgress.progress}%` }}
+                          ></div>
+                        </div>
+                        <span className="progress-text">{dayProgress.progress}%</span>
+                      </div>
+                    )}
                   </div>
                 </div>
-                <div className="exercise-card-details">
-                  <span className="exercise-count">{workoutData[day]?.exercises?.length || 0} exercises</span>
-                  {/* Duration removed from all cards */}
-                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import SplashScreen from './components/SplashScreen';
 import WorkoutPage from './components/WorkoutPage';
 import WorkoutDetailPage from './components/WorkoutDetailPage';
 import DietPage from './components/DietPage';
@@ -10,7 +9,6 @@ import BottomNavigation from './components/BottomNavigation';
 import './App.css';
 
 function App() {
-  const [showSplash, setShowSplash] = useState(true);
   const [appData, setAppData] = useState(null);
 
   // Load data from localStorage on app start
@@ -37,21 +35,12 @@ function App() {
     }
   }, []);
 
-  // Handle splash screen completion
-  const handleSplashComplete = () => {
-    setShowSplash(false);
-  };
-
   // Save data to localStorage whenever appData changes
   useEffect(() => {
     if (appData) {
       localStorage.setItem('workoutAppData', JSON.stringify(appData));
     }
   }, [appData]);
-
-  if (showSplash) {
-    return <SplashScreen onNext={handleSplashComplete} />;
-  }
 
   return (
     <Router>

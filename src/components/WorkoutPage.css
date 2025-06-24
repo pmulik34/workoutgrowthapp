@@ -124,6 +124,20 @@
   letter-spacing: 0.5px;
 }
 
+/* Today's Progress Display */
+.today-progress {
+  font-size: 0.9rem;
+  color: #FFFFFF;
+  margin: 0.5rem 0 0 0;
+  opacity: 0.9;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(205, 251, 71, 0.3);
+}
+
 .workout-duration {
   font-size: 0.9rem;
   color: #FFFFFF;
@@ -154,8 +168,6 @@
   background: linear-gradient(135deg, rgba(205, 251, 71, 0.3) 0%, rgba(168, 214, 58, 0.3) 100%);
   border-radius: 16px;
 }
-
-
 
 .start-workout-btn {
   background: linear-gradient(135deg, #CDFB47 0%, #a8d63a 100%);
@@ -270,6 +282,22 @@
   transform: scale(1.02); /* Reduce scale to prevent cropping */
 }
 
+/* Past/Future Day Visual States */
+.exercise-card.past-day {
+  /* Remove all visual filters - keep cards clearly visible */
+}
+
+.exercise-card.future-day {
+  /* Remove all visual filters - keep cards clearly visible */
+}
+
+.exercise-card.past-day:hover,
+.exercise-card.future-day:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5);
+  border-color: rgba(205, 251, 71, 0.5);
+}
+
 .exercise-card-overlay {
   position: absolute;
   top: 0;
@@ -285,6 +313,17 @@
   border-radius: 16px;
 }
 
+/* Keep overlay consistent for all cards */
+.exercise-card.past-day .exercise-card-overlay,
+.exercise-card.future-day .exercise-card-overlay {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.3) 0%,
+    rgba(0, 0, 0, 0.5) 50%,
+    rgba(0, 0, 0, 0.8) 100%
+  );
+}
+
 .exercise-card-content {
   position: relative;
   z-index: 2;
@@ -297,7 +336,12 @@
 
 .exercise-card-header {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.exercise-card-info {
+  flex: 1;
 }
 
 .exercise-card-info h4 {
@@ -314,6 +358,11 @@
   color: #CDFB47;
 }
 
+.exercise-card.past-day .exercise-card-info h4,
+.exercise-card.future-day .exercise-card-info h4 {
+  color: #FFFFFF; /* Keep text white and clear */
+}
+
 .exercise-card-type {
   font-size: 0.85rem;
   color: #FFFFFF;
@@ -328,6 +377,57 @@
 .exercise-card.current-day .exercise-card-type {
   color: #FFFFFF;
   opacity: 1;
+}
+
+.exercise-card.past-day .exercise-card-type,
+.exercise-card.future-day .exercise-card-type {
+  color: #FFFFFF; /* Keep text white and clear */
+  opacity: 0.9;
+}
+
+/* Day Status Icon */
+.day-status-icon {
+  font-size: 1.2rem;
+  margin-left: 0.5rem;
+  opacity: 0.8;
+}
+
+/* Completion Badge */
+.completion-badge {
+  font-size: 1.5rem;
+  margin-left: 0.5rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+/* Progress Indicator */
+.progress-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+}
+
+.mini-progress-bar {
+  flex: 1;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.mini-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #CDFB47 0%, #a8d63a 100%);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 0.7rem;
+  color: #FFFFFF;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  min-width: 30px;
 }
 
 .exercise-card-details {
@@ -353,6 +453,15 @@
 .exercise-card.current-day .exercise-duration {
   background: rgba(205, 251, 71, 0.2);
   color: #FFFFFF;
+}
+
+.exercise-card.past-day .exercise-count,
+.exercise-card.past-day .exercise-duration,
+.exercise-card.future-day .exercise-count,
+.exercise-card.future-day .exercise-duration {
+  background: rgba(0, 0, 0, 0.4); /* Keep consistent with default */
+  color: #FFFFFF; /* Keep text white and clear */
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 /* Mobile Responsiveness */
