@@ -1,44 +1,65 @@
 .workout-page {
-  padding: 1.5rem;
-  background: #000000;
-  color: #FFFFFF;
+  background: url('../assets/yami.png') center center/cover no-repeat, var(--bg-primary);
+  color: var(--text-primary);
   min-height: 100vh;
   font-family: 'Poppins', sans-serif;
-  padding-bottom: 6rem; /* Add extra bottom padding for bottom navigation */
+  padding: 2rem 1.5rem;
+  padding-bottom: 8rem; /* Space for bottom navigation */
+  position: relative;
+}
+
+.workout-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 15, 0.7); /* dark overlay */
+  z-index: 0;
+  pointer-events: none;
+}
+
+.workout-page > * {
+  position: relative;
+  z-index: 1;
 }
 
 /* Greeting Section */
 .greeting-section {
-  margin-top: 2rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .greeting-section h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
+  font-size: 2.8rem;
+  font-weight: 900;
   margin: 0 0 0.5rem 0;
-  color: #FFFFFF;
-  font-family: 'Poppins', sans-serif;
+  color: var(--text-primary);
+  line-height: 1.2;
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: var(--text-glow);
+  letter-spacing: 1px;
 }
 
 .tagline {
-  font-size: 1rem;
-  color: #FFFFFF;
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  opacity: 0.9;
   margin: 0;
-  opacity: 0.8;
-  font-weight: 400;
-  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  text-shadow: var(--text-shadow);
 }
 
 /* Motivational Quote */
 .motivational-quote {
-  background: linear-gradient(135deg, #CDFB47 0%, #CDFB47 100%);
-  color: #000000;
+  background: transparent;
+  box-shadow: none;
+  border: 1px solid rgba(205, 251, 71, 0.2);
+  backdrop-filter: blur(4px);
   padding: 1.5rem;
   border-radius: 16px;
   margin-bottom: 1.5rem;
   text-align: center;
-  box-shadow: 0 4px 20px rgba(205, 251, 71, 0.3);
 }
 
 .motivational-quote p {
@@ -52,15 +73,24 @@
 
 /* Today's Workout Widget */
 .todays-workout-widget {
+  position: relative;
+  height: 220px;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 2.5rem;
   background-size: cover;
   background-position: center;
-  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   padding: 2rem;
-  margin-bottom: 2rem;
-  border: 2px solid #5B5B5B;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-  position: relative;
-  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease;
+}
+
+.todays-workout-widget:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-glow);
 }
 
 .todays-workout-widget::before {
@@ -72,56 +102,40 @@
   bottom: 0;
   background: linear-gradient(
     135deg,
-    rgba(0, 0, 0, 0.7) 0%,
-    rgba(0, 0, 0, 0.5) 50%,
-    rgba(0, 0, 0, 0.8) 100%
+    rgba(10, 10, 15, 0.8) 0%,
+    rgba(26, 26, 46, 0.5) 50%,
+    rgba(10, 10, 15, 0.9) 100%
   );
-  border-radius: 20px;
   z-index: 1;
 }
 
-.todays-workout-widget::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #CDFB47 0%, #CDFB47 100%);
-  border-radius: 20px 20px 0 0;
-  z-index: 2;
-}
-
 .workout-widget-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1.5rem;
   position: relative;
-  z-index: 3;
-}
-
-.workout-widget-info {
+  z-index: 2;
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .workout-widget-info h3 {
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: 800;
+  color: var(--text-primary);
   margin: 0 0 0.5rem 0;
-  color: #FFFFFF;
-  font-family: 'Poppins', sans-serif;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  text-shadow: var(--text-shadow);
+  background: var(--gradient-fire);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .workout-type-main {
-  font-size: 1.1rem;
-  color: #CDFB47;
-  margin: 0 0 0.5rem 0;
+  font-size: 1.3rem;
+  color: var(--text-secondary);
+  margin: 0;
   font-weight: 600;
-  font-family: 'Poppins', sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  text-shadow: var(--text-shadow);
 }
 
 .workout-duration {
@@ -155,75 +169,92 @@
   border-radius: 16px;
 }
 
-
-
-.start-workout-btn {
-  background: linear-gradient(135deg, #CDFB47 0%, #a8d63a 100%);
-  color: #000000;
+.anime-btn {
+  background: var(--gradient-accent);
   border: none;
-  border-radius: 16px;
-  padding: 1.2rem 2rem;
-  font-size: 1.1rem;
-  font-weight: 700;
+  border-radius: 50px;
+  padding: 1.2rem 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #000000;
   cursor: pointer;
+  box-shadow: var(--shadow-glow);
   transition: all 0.3s ease;
-  width: 100%;
-  font-family: 'Poppins', sans-serif;
+  align-self: flex-start;
+  min-width: 160px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-shadow: 0 4px 16px rgba(205, 251, 71, 0.3);
+  letter-spacing: 1px;
   position: relative;
   overflow: hidden;
-  z-index: 3;
+  z-index: 2;
 }
 
-.start-workout-btn::before {
+.anime-btn::after {
   content: '';
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
 }
 
-.start-workout-btn:hover::before {
+.anime-btn:hover::after {
   left: 100%;
 }
 
-.start-workout-btn:hover {
+.anime-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(205, 251, 71, 0.4);
-  filter: brightness(1.1);
+  box-shadow: 0 15px 40px rgba(0, 212, 255, 0.4);
 }
 
-.start-workout-btn:active {
+.anime-btn:active {
   transform: translateY(-1px);
+}
+
+.btn-text {
+  font-weight: 800;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+.btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+  font-size: 1.3rem;
+}
+
+.anime-btn:hover .btn-icon {
+  transform: translateX(4px) scale(1.2);
 }
 
 /* Weekly Exercises */
 .weekly-exercises {
-  margin-bottom: 3rem;
-  padding: 0 0.5rem; /* Add horizontal padding to prevent cropping */
+  margin-bottom: 2rem;
 }
 
 .weekly-exercises h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 1.5rem;
-  color: #FFFFFF;
-  font-family: 'Poppins', sans-serif;
-  padding-left: 0.5rem;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0 0 1.5rem 0;
+  text-shadow: var(--text-shadow);
 }
 
 .exercise-cards-container {
-  display: flex;
-  gap: 1.2rem;
-  overflow-x: auto;
-  padding: 1rem 0.5rem; /* Increase vertical padding and add horizontal padding */
-  scroll-behavior: smooth;
-  margin: 0 -0.5rem; /* Negative margin to allow cards to breathe */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
 }
 
 .exercise-cards-container::-webkit-scrollbar {
@@ -245,29 +276,25 @@
 }
 
 .exercise-card {
-  min-width: 270px;
-  height: 250px;
-  background-size: cover;
-  background-position: center;
-  border-radius: 16px;
   position: relative;
+  height: 180px;
+  border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
   transition: all 0.3s ease;
-  border: 2px solid #1a1a1a;
-  flex-shrink: 0; /* Prevent cards from shrinking */
+  background-size: cover;
+  background-position: center;
+  box-shadow: var(--shadow);
 }
 
 .exercise-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5);
-  border-color: #CDFB47;
+  box-shadow: var(--shadow-glow);
 }
 
 .exercise-card.current-day {
-  border-color: #CDFB47;
-  box-shadow: 0 0 9px rgba(205, 251, 71, 0.5);
-  transform: scale(1.02); /* Reduce scale to prevent cropping */
+  border: 3px solid var(--accent-blue);
+  box-shadow: var(--shadow-glow);
 }
 
 .exercise-card-overlay {
@@ -277,12 +304,12 @@
   right: 0;
   bottom: 0;
   background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.3) 0%,
-    rgba(0, 0, 0, 0.5) 50%,
-    rgba(0, 0, 0, 0.8) 100%
+    135deg,
+    rgba(10, 10, 15, 0.7) 0%,
+    rgba(26, 26, 46, 0.4) 50%,
+    rgba(10, 10, 15, 0.8) 100%
   );
-  border-radius: 16px;
+  z-index: 1;
 }
 
 .exercise-card-content {
@@ -292,190 +319,133 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 1.5rem; /* Increase padding inside cards */
+  padding: 1.5rem;
 }
 
 .exercise-card-header {
-  display: flex;
-  flex-direction: column;
+  flex: 1;
 }
 
 .exercise-card-info h4 {
-  font-size: 1.1rem;
-  font-weight: 700;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text-primary);
   margin: 0 0 0.5rem 0;
-  color: #FFFFFF;
-  font-family: 'Poppins', sans-serif;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
-  line-height: 1.2;
-}
-
-.exercise-card.current-day .exercise-card-info h4 {
-  color: #CDFB47;
+  text-shadow: var(--text-shadow);
 }
 
 .exercise-card-type {
-  font-size: 0.85rem;
-  color: #FFFFFF;
-  margin: 0 0 0.5rem 0;
-  opacity: 0.9;
-  font-weight: 500;
-  font-family: 'Poppins', sans-serif;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-  line-height: 1.3;
-}
-
-.exercise-card.current-day .exercise-card-type {
-  color: #FFFFFF;
-  opacity: 1;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin: 0;
+  font-weight: 600;
+  text-shadow: var(--text-shadow);
 }
 
 .exercise-card-details {
   display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.exercise-count, .exercise-duration {
-  font-size: 0.8rem;
-  color: #FFFFFF;
+.exercise-count {
+  font-size: 0.9rem;
   font-weight: 600;
-  font-family: 'Poppins', sans-serif;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
-  background: rgba(0, 0, 0, 0.4);
-  padding: 0.4rem 0.8rem;
-  border-radius: 10px;
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.exercise-card.current-day .exercise-count,
-.exercise-card.current-day .exercise-duration {
-  background: rgba(205, 251, 71, 0.2);
-  color: #FFFFFF;
+  color: var(--accent-blue);
+  text-shadow: var(--text-glow);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   .workout-page {
-    padding: 1rem;
-    padding-bottom: 6rem;
+    padding: 1.5rem 1rem;
+    padding-bottom: 7rem;
   }
-
+  
   .greeting-section h1 {
-    font-size: 2rem;
+    font-size: 2.2rem;
   }
-
-  .motivational-quote {
-    padding: 1rem;
+  
+  .tagline {
+    font-size: 1.1rem;
   }
-
-  .motivational-quote p {
-    font-size: 1rem;
-  }
-
+  
   .todays-workout-widget {
+    height: 200px;
     padding: 1.5rem;
+    margin-bottom: 2rem;
   }
-
+  
   .workout-widget-info h3 {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
   }
-
-  .workout-widget-content {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 1rem;
+  
+  .workout-type-main {
+    font-size: 1.1rem;
   }
-
-  .workout-widget-image {
-    width: 80px;
-    height: 80px;
+  
+  .anime-btn {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    min-width: 140px;
   }
-
-  .start-workout-btn {
-    padding: 1rem 1.5rem;
-    font-size: 1rem;
-  }
-
-  .weekly-exercises {
-    margin-bottom: 2.5rem;
-    padding: 0 0.3rem;
-  }
-
+  
   .weekly-exercises h2 {
-    font-size: 1.3rem;
-    margin-bottom: 1.2rem;
-    padding-left: 0.3rem;
+    font-size: 1.6rem;
   }
-
+  
   .exercise-cards-container {
+    grid-template-columns: 1fr;
     gap: 1rem;
-    padding: 0.8rem 0.3rem;
-    margin: 0 -0.3rem;
   }
-
+  
   .exercise-card {
-    min-width: 240px;
-    height: 230px;
-  }
-
-  .exercise-card-content {
-    padding: 1.2rem;
+    height: 160px;
   }
 }
 
 @media (max-width: 480px) {
-  .greeting-section h1 {
-    font-size: 1.8rem;
-  }
-
   .workout-page {
-    padding: 0.8rem;
-    padding-bottom: 6rem;
+    padding: 1rem 0.8rem;
+    padding-bottom: 7rem;
   }
-
+  
+  .greeting-section h1 {
+    font-size: 2rem;
+  }
+  
+  .todays-workout-widget {
+    height: 180px;
+    padding: 1.2rem;
+  }
+  
   .workout-widget-info h3 {
-    font-size: 1.3rem;
+    font-size: 1.6rem;
   }
-
-  .workout-widget-image {
-    width: 70px;
-    height: 70px;
+  
+  .anime-btn {
+    padding: 0.9rem 1.8rem;
+    font-size: 1rem;
+    min-width: 120px;
   }
-
-  .weekly-exercises {
-    margin-bottom: 2rem;
-    padding: 0 0.2rem;
-  }
-
+  
   .weekly-exercises h2 {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-    padding-left: 0.2rem;
+    font-size: 1.4rem;
+    margin-bottom: 1.2rem;
   }
-
-  .exercise-cards-container {
-    gap: 0.8rem;
-    padding: 0.6rem 0.2rem;
-    margin: 0 -0.2rem;
-  }
-
+  
   .exercise-card {
-    min-width: 200px;
-    height: 210px;
-  }
-
-  .exercise-card-content {
+    height: 140px;
     padding: 1rem;
   }
-
+  
   .exercise-card-info h4 {
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
-
+  
   .exercise-card-type {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
   }
 } 

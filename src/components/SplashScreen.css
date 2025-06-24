@@ -28,9 +28,54 @@
   display: block;
 }
 
+/* Anime Particles */
+.particles-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: var(--accent-blue);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--accent-blue);
+  animation: particle-float 4s ease-in-out infinite;
+}
+
+.particle:nth-child(2) {
+  background: var(--accent-purple);
+  box-shadow: 0 0 10px var(--accent-purple);
+  animation-delay: 1s;
+}
+
+.particle:nth-child(3) {
+  background: var(--accent-pink);
+  box-shadow: 0 0 10px var(--accent-pink);
+  animation-delay: 2s;
+}
+
+.particle:nth-child(4) {
+  background: var(--accent-green);
+  box-shadow: 0 0 10px var(--accent-green);
+  animation-delay: 0.5s;
+}
+
+.particle:nth-child(5) {
+  background: var(--accent-orange);
+  box-shadow: 0 0 10px var(--accent-orange);
+  animation-delay: 1.5s;
+}
+
 .splash-content {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   height: 100vh;
   width: 100vw;
   display: flex;
@@ -38,9 +83,9 @@
   padding: 2rem 1.5rem;
   background: linear-gradient(
     180deg, 
-    rgba(0, 0, 0, 0.6) 0%, 
-    rgba(0, 0, 0, 0.4) 40%, 
-    rgba(0, 0, 0, 0.7) 100%
+    rgba(10, 10, 15, 0.8) 0%, 
+    rgba(26, 26, 46, 0.6) 40%, 
+    rgba(10, 10, 15, 0.9) 100%
   );
   box-sizing: border-box;
 }
@@ -52,110 +97,180 @@
   justify-content: center;
   padding: 0 1rem;
   min-height: 0;
-  margin-top: 8rem;
+  margin-top: 6rem;
+}
+
+.anime-title-container {
+  max-width: 600px;
 }
 
 .hero-title {
-  font-weight: 800;
+  font-weight: 900;
   line-height: 1.1;
   color: var(--text-primary);
-  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+  text-shadow: var(--text-shadow);
   margin: 0;
   padding: 0;
   max-width: 100%;
   word-wrap: break-word;
-  font-size: 3rem;
+  font-size: 3.5rem;
+  letter-spacing: 1px;
 }
 
-.hero-title .highlight {
-  background: var(--accent-green);
-  color: #000000;
+.anime-text-glow {
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: var(--text-glow);
+  font-weight: 800;
+}
+
+.anime-power {
+  background: var(--gradient-fire);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   padding: 0.4rem 1rem;
   border-radius: 15px;
-  font-weight: 800;
+  font-weight: 900;
   display: inline-block;
   margin-left: 0.5rem;
-  box-shadow: 0 4px 15px rgba(57, 255, 20, 0.4);
-  transform: rotate(6deg);
+  box-shadow: var(--shadow-glow);
+  transform: rotate(2deg);
   position: relative;
   margin-top: 1rem;
   white-space: nowrap;
+  text-shadow: var(--text-glow);
+  animation: power-pulse 2s ease-in-out infinite;
 }
 
-.hero-image {
-  width: 280px;
-  height: 350px;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: var(--shadow);
-  position: relative;
+@keyframes power-pulse {
+  0%, 100% { transform: rotate(2deg) scale(1); }
+  50% { transform: rotate(2deg) scale(1.05); }
 }
 
-.workout-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
+.anime-quote {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.anime-quote p {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+  text-shadow: var(--text-shadow);
+}
+
+.quote-author {
+  font-size: 1rem;
+  color: var(--accent-blue);
+  font-weight: 500;
+  text-shadow: var(--text-glow);
 }
 
 .action-section {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 2rem 1rem;
   flex-shrink: 0;
+  gap: 1.5rem;
 }
 
-.get-started-btn {
-  background: var(--accent-green);
+.anime-btn {
+  background: var(--gradient-accent);
   border: none;
   border-radius: 50px;
-  padding: 1.2rem 2rem;
+  padding: 1.5rem 3rem;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-size: 1.3rem;
+  font-weight: 800;
   color: #000000;
   cursor: pointer;
-  box-shadow: 0 8px 25px rgba(57, 255, 20, 0.4);
+  box-shadow: var(--shadow-glow);
   transition: all 0.3s ease;
   width: 100%;
   max-width: 400px;
-  min-height: 56px;
+  min-height: 60px;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
 }
 
-.get-started-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 35px rgba(57, 255, 20, 0.5);
+.anime-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
 }
 
-.get-started-btn:active {
-  transform: translateY(-1px);
+.anime-btn:hover::after {
+  left: 100%;
 }
 
-.get-started-btn .btn-text {
-  font-weight: 700;
-  letter-spacing: 0.5px;
+.anime-btn:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 212, 255, 0.4);
+}
+
+.anime-btn:active {
+  transform: translateY(-2px);
+}
+
+.anime-btn .btn-text {
+  font-weight: 800;
+  letter-spacing: 1px;
   white-space: nowrap;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
 }
 
-.get-started-btn .btn-icon {
+.anime-btn .btn-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   transition: transform 0.3s ease;
   flex-shrink: 0;
+  font-size: 1.5rem;
 }
 
-.get-started-btn:hover .btn-icon {
-  transform: translateX(4px);
+.anime-btn:hover .btn-icon {
+  transform: translateX(4px) scale(1.2);
+}
+
+.power-level-indicator {
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid var(--accent-blue);
+  border-radius: 25px;
+  padding: 0.8rem 2rem;
+  backdrop-filter: blur(10px);
+}
+
+.power-text {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--accent-blue);
+  text-shadow: var(--text-glow);
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
 /* Mobile Responsiveness */
@@ -164,32 +279,42 @@
     padding: 1.5rem 1rem;
   }
   
-  /* .hero-title {
-    font-size: clamp(1.8rem, 7vw, 3rem);
-  } */
+  .hero-title {
+    font-size: 2.5rem;
+  }
   
   .hero-section {
     padding: 0 0.5rem;
+    margin-top: 4rem;
   }
   
   .action-section {
     padding: 1.5rem 1rem;
   }
   
-  .get-started-btn {
-    padding: 1.1rem 2rem;
-    font-size: 1.1rem;
+  .anime-btn {
+    padding: 1.3rem 2.5rem;
+    font-size: 1.2rem;
     width: 100%;
     max-width: 350px;
+  }
+  
+  .anime-quote {
+    margin-top: 1.5rem;
+    padding: 1.2rem;
+  }
+  
+  .anime-quote p {
+    font-size: 1.1rem;
   }
 }
 
 @media (max-width: 480px) {
-  /* .hero-title {
-    font-size: clamp(1.6rem, 6vw, 2.5rem);
-  } */
+  .hero-title {
+    font-size: 2rem;
+  }
   
-  .hero-title .highlight {
+  .anime-power {
     padding: 0.3rem 0.8rem;
     border-radius: 12px;
     margin-left: 0.3rem;
@@ -199,46 +324,34 @@
     padding: 1.5rem 0.8rem;
   }
   
-  .get-started-btn {
-    padding: 1rem 1.5rem;
-    font-size: 1rem;
-    width: 100%;
-    max-width: none;
+  .anime-btn {
+    padding: 1.2rem 2rem;
+    font-size: 1.1rem;
+  }
+  
+  .power-level-indicator {
+    padding: 0.6rem 1.5rem;
+  }
+  
+  .power-text {
+    font-size: 0.8rem;
   }
 }
 
 @media (max-width: 380px) {
-  /* .hero-title {
-    font-size: clamp(1.5rem, 5.5vw, 2.2rem);
-  } */
-  
-  .splash-content {
-    padding: 1rem 0.8rem;
+  .hero-title {
+    font-size: 1.8rem;
   }
   
-  .hero-section {
-    padding: 0 0.3rem;
-  }
-  
-  .action-section {
-    padding: 1.5rem 0.5rem;
-  }
-  
-  .get-started-btn {
-    padding: 1rem 1.3rem;
-    font-size: 0.95rem;
-    width: 100%;
+  .anime-btn {
+    padding: 1.1rem 1.8rem;
+    font-size: 1rem;
   }
 }
 
-/* Landscape orientation adjustments */
 @media (orientation: landscape) and (max-height: 600px) {
-  /* .hero-title {
-    font-size: clamp(1.5rem, 5vw, 2.8rem);
-  }
-   */
   .splash-content {
-    padding: 1rem;
+    padding: 1rem 1.5rem;
   }
   
   .action-section {
@@ -246,12 +359,15 @@
   }
   
   .hero-section {
-    justify-content: center;
+    margin-top: 2rem;
+  }
+  
+  .anime-quote {
+    margin-top: 1rem;
+    padding: 1rem;
   }
 }
 
-/* Prevent text selection and improve performance */
 .splash-screen * {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
 } 

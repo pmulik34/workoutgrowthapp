@@ -4,18 +4,29 @@ import './WorkoutPage.css';
 import { workoutData } from '../WorkoutData.js';
 
 // Import workout images
-import upperBodyImg from '../assets/upperbody.jpeg';
-import lowerBodyImg from '../assets/lowerbody.jpeg';
-import coreWorkoutImg from '../assets/coreworkout.jpeg';
-import flexibilityImg from '../assets/flexibility.jpeg';
+import upperBodyImg from '../assets/goku-upperbody.png';
+import lowerBodyImg from '../assets/vegata-back.png';
+import coreWorkoutImg from '../assets/baki-core.png';
+import flexibilityImg from '../assets/zoro.png';
 import muscleImg from '../assets/muscle.png';
+import luffyRestImg from '../assets/luffy-rest.png';
+import shanksRestImg from '../assets/shanks-rest.png';
+import erenFullbodyImg from '../assets/eren-fullbody.png';
 
-const WorkoutPage = () => {
+const WorkoutPage = ({ userData }) => {
   const navigate = useNavigate();
 
   // Get current day
   const currentDay = new Date().toLocaleDateString('en-US', { weekday: 'long' });
-  const userName = "John Doe"; // You can make this dynamic later
+  
+  // Get user's first name or use default greeting
+  const getGreeting = () => {
+    if (userData && userData.name && userData.name.trim()) {
+      const firstName = userData.name.trim().split(' ')[0];
+      return `Ready for battle, ${firstName}? ⚔️`;
+    }
+    return 'Ready for battle, Warrior? ⚔️';
+  };
 
   // Get current day's exercises
   const todaysExercises = workoutData[currentDay]?.exercises || [];
@@ -24,25 +35,25 @@ const WorkoutPage = () => {
   const categorizeExercise = (exerciseName) => {
     const name = exerciseName.toLowerCase();
     if (name.includes('push') || name.includes('angel') || name.includes('burpee')) {
-      return 'Upper Body';
+      return 'Dragon Training';
     } else if (name.includes('squat') || name.includes('lunge') || name.includes('step') || name.includes('bridge')) {
-      return 'Lower Body';
+      return 'Ninja Agility';
     } else if (name.includes('plank') || name.includes('crunch') || name.includes('tap')) {
-      return 'Core';
+      return 'Core Mastery';
     } else if (name.includes('stretch') || name.includes('pose') || name.includes('cobra') || name.includes('twist')) {
-      return 'Flexibility';
+      return 'Spirit Flexibility';
     } else if (name.includes('rest')) {
-      return 'Recovery';
+      return 'Meditation';
     } else if (name.includes('hang') || name.includes('hold')) {
-      return 'Endurance';
+      return 'Endurance Test';
     } else {
-      return 'Strength';
+      return 'Hero Strength';
     }
   };
 
   // Get unique workout types for today's exercises
   const getTodaysWorkoutTypes = () => {
-    if (todaysExercises.length === 0) return ['Rest Day'];
+    if (todaysExercises.length === 0) return ['Rest & Recovery'];
     const types = [...new Set(todaysExercises.map(exercise => categorizeExercise(exercise.name)))];
     return types;
   };
@@ -64,32 +75,35 @@ const WorkoutPage = () => {
   // Get workout summary for a specific day
   const getDayWorkoutSummary = (day) => {
     const dayData = workoutData[day];
-    if (!dayData || !dayData.exercises || dayData.exercises.length === 0) return 'Rest Day';
+    if (!dayData || !dayData.exercises || dayData.exercises.length === 0) return 'Rest & Recovery';
     
     if (dayData.title) {
       return dayData.title;
     }
     
     const types = [...new Set(dayData.exercises.map(exercise => categorizeExercise(exercise.name)))];
-    return types.length > 1 ? `${types[0]} Workout` : `${types[0]} Workout`;
+    return types.length > 1 ? `${types[0]} Training` : `${types[0]} Training`;
   };
 
   // Get workout image for a day
   const getWorkoutImage = (day) => {
-    const dayData = workoutData[day];
-    if (!dayData || !dayData.exercises || dayData.exercises.length === 0) return flexibilityImg;
-    
-    const types = [...new Set(dayData.exercises.map(exercise => categorizeExercise(exercise.name)))];
-    const primaryType = types[0];
-    
-    switch (primaryType) {
-      case 'Upper Body': return upperBodyImg;
-      case 'Lower Body': return lowerBodyImg;
-      case 'Core': return coreWorkoutImg;
-      case 'Flexibility': return flexibilityImg;
-      case 'Endurance': return muscleImg;
-      case 'Recovery': return flexibilityImg;
-      default: return muscleImg;
+    switch (day) {
+      case 'Monday':
+        return coreWorkoutImg; // Baki
+      case 'Tuesday':
+        return lowerBodyImg; // Vegeta
+      case 'Wednesday':
+        return flexibilityImg; // Zoro
+      case 'Thursday':
+        return upperBodyImg; // Goku
+      case 'Friday':
+        return erenFullbodyImg; // Eren
+      case 'Saturday':
+        return luffyRestImg; // Luffy Rest
+      case 'Sunday':
+        return shanksRestImg; // Shanks Rest
+      default:
+        return muscleImg;
     }
   };
 
@@ -107,8 +121,8 @@ const WorkoutPage = () => {
     <div className="workout-page">
       {/* Greeting Section */}
       <div className="greeting-section">
-        <h1>Hi! 👋</h1>
-        <p className="tagline">Make your body perfect!</p>
+        <h1>{getGreeting()}</h1>
+        <p className="tagline">Choose your training path and become stronger!</p>
       </div>
 
       {/* Today's Workout Widget */}
@@ -122,14 +136,15 @@ const WorkoutPage = () => {
             <p className="workout-type-main">{getTodaysWorkoutTitle()}</p>        
           </div>
         </div>
-        <button className="start-workout-btn" onClick={handleStartWorkout}>
-          Start Workout
+        <button className="start-workout-btn anime-btn glow-effect" onClick={handleStartWorkout}>
+          <span className="btn-text">BEGIN TRAINING</span>
+          <span className="btn-icon">⚡</span>
         </button>
       </div>
 
       {/* Weekly Exercise Cards */}
       <div className="weekly-exercises">
-        <h2>Weekly Exercises</h2>
+        <h2>Weekly Training Schedule</h2>
         <div className="exercise-cards-container">
           {getAllDays().map((day) => (
             <div 
@@ -147,8 +162,7 @@ const WorkoutPage = () => {
                   </div>
                 </div>
                 <div className="exercise-card-details">
-                  <span className="exercise-count">{workoutData[day]?.exercises?.length || 0} exercises</span>
-                  {/* Duration removed from all cards */}
+                  <span className="exercise-count">{workoutData[day]?.exercises?.length || 0} challenges</span>
                 </div>
               </div>
             </div>

@@ -8,11 +8,22 @@ import dietIcon from '../assets/healthy-food.png';
 import progressIcon from '../assets/report.png';
 import profileIcon from '../assets/user.png';
 
+const isEmoji = (icon) => {
+  // If it's a single Unicode character or a short string, treat as emoji
+  return typeof icon === 'string' && icon.length <= 3 && !icon.endsWith('.png') && !icon.endsWith('.jpg') && !icon.endsWith('.svg');
+};
+
 const BottomNavigation = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
   const tabs = [
+    {
+      id: 'home',
+      label: 'Home',
+      icon: '🏠',
+      path: '/'
+    },
     {
       id: 'workout',
       label: 'Workout',
@@ -42,11 +53,12 @@ const BottomNavigation = () => {
   // Determine active tab based on current path
   const getActiveTab = () => {
     const currentPath = location.pathname;
+    if (currentPath === '/' || currentPath === '/home') return 'home';
     if (currentPath.startsWith('/workout')) return 'workout';
     if (currentPath.startsWith('/diet')) return 'diet';
     if (currentPath.startsWith('/progress')) return 'progress';
     if (currentPath.startsWith('/profile')) return 'profile';
-    return 'workout';
+    return 'home'; // Default to home
   };
 
   const activeTab = getActiveTab();
@@ -64,11 +76,15 @@ const BottomNavigation = () => {
           onClick={() => handleTabClick(tab.path)}
         >
           <div className="nav-icon">
-            <img 
-              src={tab.icon} 
-              alt={tab.label} 
-              className="nav-icon-img"
-            />
+            {isEmoji(tab.icon) ? (
+              <span className="nav-icon-emoji">{tab.icon}</span>
+            ) : (
+              <img 
+                src={tab.icon} 
+                alt={tab.label} 
+                className="nav-icon-img"
+              />
+            )}
           </div>
           <span className="nav-label">{tab.label}</span>
         </button>

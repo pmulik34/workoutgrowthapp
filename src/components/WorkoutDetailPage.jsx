@@ -56,6 +56,49 @@ const WorkoutDetailPage = () => {
     return workoutDataStore;
   };
 
+  // Update main app progress data
+  const updateMainAppProgress = (workoutDataStore) => {
+    const savedData = localStorage.getItem('workoutAppData');
+    if (savedData) {
+      const appData = JSON.parse(savedData);
+      
+      // Calculate this week's completed workouts
+      const { weekId } = getCurrentWeekInfo();
+      const workoutDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+      let thisWeekCompleted = 0;
+      
+      workoutDays.forEach(day => {
+        const dayCompletionKey = `${weekId}_${day}`;
+        if (workoutDataStore.completionHistory?.[dayCompletionKey]?.completed) {
+          thisWeekCompleted++;
+        }
+      });
+
+      // Update progress data
+      appData.progress = {
+        currentStreak: workoutDataStore.statistics.currentStreak || 0,
+        totalWorkouts: workoutDataStore.statistics.totalWorkouts || 0,
+        thisWeekCompleted: thisWeekCompleted,
+        thisWeekTotal: 7,
+        stats: {
+          totalCaloriesBurned: appData.progress?.stats?.totalCaloriesBurned || 0,
+          totalTimeSpent: appData.progress?.stats?.totalTimeSpent || 0,
+          averageWorkoutDuration: appData.progress?.stats?.averageWorkoutDuration || 0,
+          favoriteWorkoutType: appData.progress?.stats?.favoriteWorkoutType || 'None'
+        }
+      };
+
+      // Update user data
+      appData.user = {
+        ...appData.user,
+        currentStreak: workoutDataStore.statistics.currentStreak || 0,
+        totalWorkouts: workoutDataStore.statistics.totalWorkouts || 0
+      };
+
+      localStorage.setItem('workoutAppData', JSON.stringify(appData));
+    }
+  };
+
   // Check if user can interact with this day's workout
   const checkDayAccessibility = () => {
     const today = new Date();
@@ -122,6 +165,9 @@ const WorkoutDetailPage = () => {
       checkWorkoutCompletion(workoutDataStore, weekId);
       
       localStorage.setItem('workoutDataStore', JSON.stringify(workoutDataStore));
+      
+      // Update main app progress data
+      updateMainAppProgress(workoutDataStore);
     }
   }, [completedExercises, selectedDay]);
 

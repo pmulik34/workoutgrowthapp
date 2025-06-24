@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './HomeScreen.css';
 import { workoutData } from '../WorkoutData.js';
@@ -15,6 +15,23 @@ import erenFullbodyImg from '../assets/eren-fullbody.png';
 
 const HomeScreen = ({ userData }) => {
   const navigate = useNavigate();
+  const [progressData, setProgressData] = useState({
+    currentStreak: 0,
+    totalWorkouts: 0,
+    thisWeekCompleted: 0,
+    thisWeekTotal: 7
+  });
+
+  // Load progress data from localStorage
+  useEffect(() => {
+    const savedData = localStorage.getItem('workoutAppData');
+    if (savedData) {
+      const parsedData = JSON.parse(savedData);
+      if (parsedData.progress) {
+        setProgressData(parsedData.progress);
+      }
+    }
+  }, []);
 
   // Get current day
   const currentDay = new Date().toLocaleDateString('en-US', { weekday: 'long' });
@@ -35,65 +52,47 @@ const HomeScreen = ({ userData }) => {
   const categorizeExercise = (exerciseName) => {
     const name = exerciseName.toLowerCase();
     if (name.includes('push') || name.includes('angel') || name.includes('burpee')) {
-      return 'Dragon Training';
+      return 'Upper Body';
     } else if (name.includes('squat') || name.includes('lunge') || name.includes('step') || name.includes('bridge')) {
-      return 'Ninja Agility';
+      return 'Lower Body';
     } else if (name.includes('plank') || name.includes('crunch') || name.includes('tap')) {
-      return 'Core Mastery';
+      return 'Core';
     } else if (name.includes('stretch') || name.includes('pose') || name.includes('cobra') || name.includes('twist')) {
-      return 'Spirit Flexibility';
+      return 'Flexibility';
     } else if (name.includes('rest')) {
-      return 'Meditation';
+      return 'Recovery';
     } else if (name.includes('hang') || name.includes('hold')) {
-      return 'Endurance Test';
+      return 'Endurance';
     } else {
-      return 'Hero Strength';
+      return 'Strength';
     }
   };
 
-  // Get today's workout title
   const getTodaysWorkoutTitle = () => {
-    const dayData = workoutData[currentDay];
-    if (dayData?.title) {
-      return dayData.title;
+    if (workoutData[currentDay]) {
+      return workoutData[currentDay].title;
     }
-    const types = [...new Set(todaysExercises.map(exercise => categorizeExercise(exercise.name)))];
-    return types.length > 0 ? types[0] : 'Rest & Recovery';
+    return 'Rest Day';
   };
 
-  // Get workout image for today
   const getWorkoutImage = () => {
-    switch (currentDay) {
-      case 'Monday':
-        return coreWorkoutImg; // Baki
-      case 'Tuesday':
-        return lowerBodyImg; // Vegeta
-      case 'Wednesday':
-        return flexibilityImg; // Zoro
-      case 'Thursday':
-        return upperBodyImg; // Goku
-      case 'Friday':
-        return erenFullbodyImg; // Eren
-      case 'Saturday':
-        return luffyRestImg; // Luffy Rest
-      case 'Sunday':
-        return shanksRestImg; // Shanks Rest
+    const workoutType = todaysExercises.length > 0 ? categorizeExercise(todaysExercises[0].name) : 'Rest';
+    
+    switch (workoutType) {
+      case 'Upper Body':
+        return upperBodyImg;
+      case 'Lower Body':
+        return lowerBodyImg;
+      case 'Core':
+        return coreWorkoutImg;
+      case 'Flexibility':
+        return flexibilityImg;
+      case 'Recovery':
+        return currentDay === 'Saturday' ? luffyRestImg : shanksRestImg;
       default:
-        return muscleImg;
+        return erenFullbodyImg;
     }
   };
-
-  // Get user stats (mock data for now)
-  const getUserStats = () => {
-    return {
-      currentStreak: userData?.currentStreak || 0,
-      totalWorkouts: userData?.totalWorkouts || 0,
-      thisWeekCompleted: 4, // Mock data
-      thisWeekTotal: 7
-    };
-  };
-
-  const stats = getUserStats();
 
   // Handle navigation
   const handleStartWorkout = () => {
@@ -139,79 +138,59 @@ const HomeScreen = ({ userData }) => {
       </div>
 
       {/* Progress Stats */}
-      <div className="progress-section" style={{background:'transparent'}}>
-        <h2>Your Hero Stats</h2>
+      <div className="progress-stats" style={{background:'transparent'}}>
+        <h2>Your Battle Stats</h2>
         <div className="stats-grid">
           <div className="stat-card">
             <div className="stat-icon">🔥</div>
             <div className="stat-content">
-              <div className="stat-value">{stats.currentStreak}</div>
+              <div className="stat-value">{progressData.currentStreak}</div>
               <div className="stat-label">Battle Streak</div>
             </div>
           </div>
           <div className="stat-card">
             <div className="stat-icon">⚔️</div>
             <div className="stat-content">
-              <div className="stat-value">{stats.totalWorkouts}</div>
+              <div className="stat-value">{progressData.totalWorkouts}</div>
               <div className="stat-label">Missions Completed</div>
             </div>
           </div>
           <div className="stat-card">
-            <div className="stat-icon">🎯</div>
+            <div className="stat-icon">📊</div>
             <div className="stat-content">
-              <div className="stat-value">{stats.thisWeekCompleted}/{stats.thisWeekTotal}</div>
-              <div className="stat-label">This Week's Quest</div>
+              <div className="stat-value">{progressData.thisWeekCompleted}/{progressData.thisWeekTotal}</div>
+              <div className="stat-label">This Week</div>
+            </div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-icon">💪</div>
+            <div className="stat-content">
+              <div className="stat-value">{Math.round((progressData.thisWeekCompleted / progressData.thisWeekTotal) * 100)}%</div>
+              <div className="stat-label">Weekly Progress</div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Quick Actions */}
-      <div className="quick-actions-section">
-        <h2>Training Grounds</h2>
-        <div className="actions-grid">
-          <button 
-            className="action-card workout-action"
-            onClick={() => handleNavigateTo('/workout')}
-          >
-            <div className="action-icon">🏋️</div>
-            <div className="action-text">
-              <h3>Combat Training</h3>
-              <p>Master your techniques</p>
-            </div>
+      <div className="quick-actions">
+        <h2>Quick Actions</h2>
+        <div className="action-buttons">
+          <button className="action-btn anime-btn" onClick={() => handleNavigateTo('/workout')}>
+            <span className="btn-icon">🏋️</span>
+            <span className="btn-text">View All Workouts</span>
           </button>
-          
-          <button 
-            className="action-card diet-action"
-            onClick={() => handleNavigateTo('/diet')}
-          >
-            <div className="action-icon">🥗</div>
-            <div className="action-text">
-              <h3>Power Nutrition</h3>
-              <p>Fuel your strength</p>
-            </div>
+          <button className="action-btn anime-btn" onClick={() => handleNavigateTo('/progress')}>
+            <span className="btn-icon">📈</span>
+            <span className="btn-text">Track Progress</span>
           </button>
-          
-          <button 
-            className="action-card progress-action"
-            onClick={() => handleNavigateTo('/progress')}
-          >
-            <div className="action-icon">📊</div>
-            <div className="action-text">
-              <h3>Progress Scroll</h3>
-              <p>Track your journey</p>
-            </div>
+          <button className="action-btn anime-btn" onClick={() => handleNavigateTo('/diet')}>
+            <span className="btn-icon">🥗</span>
+            <span className="btn-text">Nutrition Guide</span>
           </button>
-          
-          <button 
-            className="action-card profile-action"
-            onClick={() => handleNavigateTo('/profile')}
-          >
-            <div className="action-icon">👤</div>
-            <div className="action-text">
-              <h3>Hero Profile</h3>
-              <p>Your legend</p>
-            </div>
+          <button className="action-btn anime-btn" onClick={() => handleNavigateTo('/profile')}>
+            <span className="btn-icon">👤</span>
+            <span className="btn-text">Hero Profile</span>
           </button>
         </div>
       </div>
