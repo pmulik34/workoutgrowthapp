@@ -1,24 +1,27 @@
 /* HomeScreen Dashboard Styles */
 .home-screen {
-  background: url('../assets/guts.png') center center/cover no-repeat, var(--bg-primary);
+  background: url("../assets/guts.png") center center/cover no-repeat,
+    var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   padding: 2rem 1.5rem;
-  padding-bottom: 8rem; /* Space for bottom navigation */
+  padding-bottom: 8rem;
+  /* Space for bottom navigation */
   position: relative;
 }
 
 .home-screen::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
-  background: rgba(10, 10, 15, 0.7); /* dark overlay */
+  background: rgba(10, 10, 15, 0.7);
+  /* dark overlay */
   z-index: 0;
   pointer-events: none;
 }
 
-.home-screen > * {
+.home-screen>* {
   position: relative;
   z-index: 1;
 }
@@ -135,12 +138,10 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(10, 10, 15, 0.8) 0%,
-    rgba(26, 26, 46, 0.5) 50%,
-    rgba(10, 10, 15, 0.9) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(10, 10, 15, 0.8) 0%,
+      rgba(26, 26, 46, 0.5) 50%,
+      rgba(10, 10, 15, 0.9) 100%);
   z-index: 1;
 }
 
@@ -193,13 +194,16 @@
 }
 
 .anime-btn::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent);
   transition: left 0.5s ease;
 }
 
@@ -260,7 +264,7 @@
 .stat-card {
   background: transparent;
   box-shadow: none;
-  border: 1px solid rgba(255,255,255,0.15);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   padding: 1.5rem 1rem;
   display: flex;
   align-items: center;
@@ -271,7 +275,7 @@
 }
 
 .stat-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -336,11 +340,6 @@
   text-shadow: var(--text-shadow);
 }
 
-.actions-grid {
-
-
-}
-
 .action-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
@@ -363,7 +362,7 @@
 }
 
 .action-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -441,48 +440,48 @@
     padding: 1.5rem 1rem;
     padding-bottom: 7rem;
   }
-  
+
   .greeting-section h1 {
     font-size: 2.2rem;
   }
-  
+
   .welcome-text {
     font-size: 1.1rem;
   }
-  
+
   .workout-card-content {
     height: 200px;
     padding: 1.2rem;
   }
-  
+
   .workout-info h3 {
     font-size: 1.6rem;
   }
-  
+
   .stats-grid {
     gap: 0.8rem;
   }
-  
+
   .stat-card {
     padding: 1.2rem 0.8rem;
   }
-  
+
   .stat-icon {
     font-size: 1.8rem;
   }
-  
+
   .stat-value {
     font-size: 1.5rem;
   }
-  
+
   .actions-grid {
     gap: 0.8rem;
   }
-  
+
   .action-card {
     padding: 1.2rem;
   }
-  
+
   .action-icon {
     font-size: 1.8rem;
   }
@@ -493,51 +492,47 @@
     padding: 1rem 0.8rem;
     padding-bottom: 7rem;
   }
-  
+
   .greeting-section h1 {
     font-size: 2rem;
   }
-  
+
   .workout-card-header {
     padding: 1.2rem 1.2rem 1rem 1.2rem;
   }
-  
+
   .workout-card-header h2 {
     font-size: 1.4rem;
   }
-  
+
   .workout-card-content {
     height: 180px;
     padding: 1rem;
   }
-  
+
   .workout-info h3 {
     font-size: 1.4rem;
   }
-  
+
   .anime-btn {
     padding: 1rem 2rem;
     font-size: 1.1rem;
     min-width: 140px;
   }
-  
+
   .stats-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
-  
+
   .stat-card {
     padding: 1rem;
   }
-  
-  .actions-grid {
 
-  }
-  
   .action-card {
     padding: 1rem;
   }
-  
+
   .progress-section h2,
   .quick-actions-section h2 {
     font-size: 1.4rem;
@@ -549,7 +544,7 @@
   background: transparent !important;
   box-shadow: none !important;
   color: #ff3b3b !important;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-size: 2rem;
   font-weight: 900;
   letter-spacing: 1px;
@@ -562,4 +557,4 @@
   color: #fff;
   background: #ff3b3b22;
   border-color: #fff;
-} 
+}
