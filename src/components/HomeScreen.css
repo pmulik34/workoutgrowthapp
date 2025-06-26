@@ -1,6 +1,6 @@
 /* HomeScreen Dashboard Styles */
 .home-screen {
-  background: url("../assets/guts.png") center center/cover no-repeat,
+  background: url("../assets/zoro-bg.png") center center/cover no-repeat,
     var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;
@@ -224,6 +224,7 @@
   font-weight: 800;
   letter-spacing: 1px;
   white-space: nowrap;
+  
 }
 
 .btn-icon {
@@ -243,8 +244,28 @@
 
 /* Progress Section */
 .progress-section {
-  margin-bottom: 2rem;
   background: transparent;
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(10px);
+}
+
+.progress-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 15, 0.6);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.progress-section > * {
+  position: relative;
+  z-index: 1;
 }
 
 .progress-section h2 {
@@ -329,7 +350,28 @@
 
 /* Quick Actions Section */
 .quick-actions-section {
+  background: transparent;
+  border-radius: 16px;
+  padding: 2rem;
   margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(10px);
+}
+
+.quick-actions-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 15, 0.6);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.quick-actions-section > * {
+  position: relative;
+  z-index: 1;
 }
 
 .quick-actions-section h2 {
@@ -359,6 +401,7 @@
   min-height: 100px;
   flex-direction: row;
   justify-content: flex-start;
+  margin-top: 12px;
 }
 
 .action-card::before {

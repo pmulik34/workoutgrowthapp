@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './HomeScreen.css';
 import { workoutData } from '../WorkoutData.js';
+import { useProgress } from './ProgressContext';
 
 // Import workout images
 import upperBodyImg from '../assets/goku-upperbody.png';
@@ -15,6 +16,7 @@ import erenFullbodyImg from '../assets/eren-fullbody.png';
 
 const HomeScreen = ({ userData }) => {
   const navigate = useNavigate();
+  const { getTodayProgress } = useProgress();
 
   // Get current day
   const currentDay = new Date().toLocaleDateString('en-US', { weekday: 'long' });
@@ -83,13 +85,14 @@ const HomeScreen = ({ userData }) => {
     }
   };
 
-  // Get user stats (mock data for now)
+  // Get user stats from ProgressContext
   const getUserStats = () => {
+    const todayProgress = getTodayProgress();
     return {
       currentStreak: userData?.currentStreak || 0,
       totalWorkouts: userData?.totalWorkouts || 0,
-      thisWeekCompleted: 4, // Mock data
-      thisWeekTotal: 7
+      thisWeekCompleted: todayProgress.completed || 0,
+      thisWeekTotal: todayProgress.total || 0
     };
   };
 
@@ -140,7 +143,7 @@ const HomeScreen = ({ userData }) => {
 
       {/* Progress Stats */}
       <div className="progress-section" style={{background:'transparent'}}>
-        <h2>Your Hero Stats</h2>
+        <h2>Your Warrior Stats</h2>
         <div className="stats-grid">
           <div className="stat-card">
             <div className="stat-icon">🔥</div>
@@ -187,7 +190,7 @@ const HomeScreen = ({ userData }) => {
           >
             <div className="action-icon">🥗</div>
             <div className="action-text">
-              <h3>Power Nutrition</h3>
+              <h3>GlowUp</h3>
               <p>Fuel your strength</p>
             </div>
           </button>
@@ -209,7 +212,7 @@ const HomeScreen = ({ userData }) => {
           >
             <div className="action-icon">👤</div>
             <div className="action-text">
-              <h3>Hero Profile</h3>
+              <h3>Warrior Profile</h3>
               <p>Your legend</p>
             </div>
           </button>

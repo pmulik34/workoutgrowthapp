@@ -53,9 +53,9 @@ const ProfilePage = ({ userData, onUpdateUser }) => {
   const getGreeting = () => {
     if (userData && userData.name && userData.name.trim()) {
       const firstName = userData.name.trim().split(' ')[0];
-      return `Hero Profile: ${firstName} ⚔️`;
+      return `Warrior Profile: ${firstName} ⚔️`;
     }
-    return 'Hero Profile: Warrior ⚔️';
+    return 'Warrior Profile: Warrior ⚔️';
   };
 
   const formatTime = (minutes) => {
@@ -159,7 +159,7 @@ const ProfilePage = ({ userData, onUpdateUser }) => {
                 <div className="form-group">
                   <label htmlFor="name" className="form-label">
                     <span className="label-icon">⚔️</span>
-                    Hero Name
+                    Warrior Name
                   </label>
                   <input
                     type="text"
@@ -293,7 +293,7 @@ const ProfilePage = ({ userData, onUpdateUser }) => {
         </div>
       </div>
 
-      {/* Hero Stats */}
+      {/* Warrior Stats */}
       <div className="hero-stats">
         <h2>Your Battle Statistics</h2>
         <div className="stats-grid">
@@ -386,7 +386,7 @@ const ProfilePage = ({ userData, onUpdateUser }) => {
 
       {/* Settings Section */}
       <div className="settings-section">
-        <h2>Hero Settings</h2>
+        <h2>Warrior Settings</h2>
         <div className="settings-grid">
           <div className="setting-item">
             <div className="setting-icon">🔔</div>

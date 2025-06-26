@@ -1,0 +1,73 @@
+.profile-page {
+  background: url('../assets/zoro-bg.png') center center/cover no-repeat, var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  position: relative;
+  font-family: 'Poppins', sans-serif;
+  padding: 2rem 1.5rem;
+  padding-bottom: 8rem; /* Space for bottom navigation */
+}
+
+.profile-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 15, 0.7); /* dark overlay */
+  z-index: 0;
+  pointer-events: none;
+}
+
+.profile-page > * {
+  position: relative;
+  z-index: 1;
+}
+
+.profile-section {
+  background: transparent;
+  border-radius: 16px;
+  padding: 2rem;
+  border: 1px solid var(--border-color);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.profile-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 15, 0.6);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.profile-section > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Hero Settings Section */
+.settings-section {
+  background: transparent;
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(10px);
+}
+
+.settings-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 15, 0.6);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.settings-section > * {
+  position: relative;
+  z-index: 1;
+} 

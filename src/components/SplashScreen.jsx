@@ -1,13 +1,16 @@
 import React from 'react';
 import './SplashScreen.css';
+import gokuImage from '../assets/goku-ui.png';
+// import gokuImage from '../assets/goku-superSaiyan.png';
+
 
 const SplashScreen = ({ onNext }) => {
   return (
     <div className="splash-screen">
       <div className="background-image">
         <img 
-          src="https://miro.medium.com/v2/resize:fit:720/format:webp/1*1TcmtjXGl2vE17Mz-JV-ZQ.jpeg" 
-          alt="Anime workout motivation" 
+          src={gokuImage}
+          alt="Goku UI" 
           className="workout-bg-image"
         />
       </div>
@@ -26,23 +29,22 @@ const SplashScreen = ({ onNext }) => {
           <div className="anime-title-container">
             <h1 className="hero-title">
               <span className="anime-text-glow">Unlock Your</span><br />
-              <span className="highlight anime-power">Inner Power</span><br />
+              <span className="highlight anime-power">Super Saiyan</span><br />
               <span className="anime-text-glow">⚡🔥💪</span>
             </h1>
             <div className="anime-quote">
-              <p>"Plus Ultra! Go beyond your limits!"</p>
-              <span className="quote-author">- All Might</span>
+              <p>"Power comes in response to a need, not a desire!"</p>
             </div>
           </div>
         </div>
         
         <div className="action-section">
           <button className="get-started-btn anime-btn glow-effect" onClick={onNext}>
-            <span className="btn-text">BEGIN YOUR JOURNEY</span>
+            <span className="btn-text">BEGIN YOUR TRAINING</span>
             <span className="btn-icon">⚡</span>
           </button>
           <div className="power-level-indicator">
-            <span className="power-text">POWER LEVEL: INFINITE</span>
+            <span className="power-text">POWER LEVEL: OVER 9000!</span>
           </div>
         </div>
       </div>

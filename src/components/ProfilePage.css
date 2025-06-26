@@ -1,5 +1,5 @@
 .profile-page {
-  background: url('../assets/itachi.png') center center/cover no-repeat, var(--bg-primary);
+  background: url('../assets/zoro-bg.png') center center/cover no-repeat, var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;
   position: relative;
@@ -53,10 +53,27 @@
 }
 
 .profile-section {
-  background: var(--bg-card);
+  background: transparent;
   border-radius: 16px;
-  padding: 1.5rem;
+  padding: 2rem;
   border: 1px solid var(--border-color);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.profile-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 15, 0.6);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.profile-section > * {
+  position: relative;
+  z-index: 1;
 }
 
 .section-title {
@@ -164,7 +181,7 @@
 }
 
 .profile-card {
-  background: var(--bg-card);
+  background: transparent;
   border-radius: 16px;
   padding: 1.5rem;
   border: 1px solid var(--border-color);
@@ -651,5 +668,132 @@
   
   .error-message {
     font-size: 0.75rem;
+  }
+}
+
+/* Hero Settings Section */
+.settings-section {
+  background: transparent;
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(10px);
+}
+
+.settings-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 15, 0.6);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.settings-section > * {
+  position: relative;
+  z-index: 1;
+}
+
+.settings-section h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1.2rem;
+  letter-spacing: -1px;
+}
+
+.settings-row {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  background: var(--bg-card);
+  border-radius: 18px;
+  padding: 1.2rem 1.5rem;
+  box-shadow: 0 2px 16px 0 rgba(0,0,0,0.10);
+  border: 1.5px solid var(--border-color);
+  justify-content: space-between;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+
+.settings-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 160px;
+  flex: 1 1 0;
+  max-width: 220px;
+  padding: 0.5rem 0.7rem;
+  border-radius: 12px;
+  transition: background 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  background: transparent;
+}
+
+.settings-tile:hover {
+  background: rgba(205,251,71,0.06);
+  box-shadow: 0 2px 8px 0 #cdfb4720;
+}
+
+.settings-icon {
+  font-size: 2rem;
+  margin-bottom: 0.3rem;
+  line-height: 1;
+}
+
+.settings-title {
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.2rem;
+  text-align: center;
+}
+
+.settings-desc {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  text-align: center;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+@media (max-width: 900px) {
+  .settings-row {
+    gap: 1rem;
+    padding: 1rem 0.5rem;
+  }
+  .settings-tile {
+    min-width: 120px;
+    max-width: 180px;
+    padding: 0.5rem 0.3rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .settings-row {
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    padding: 0.7rem 0.2rem;
+  }
+  .settings-tile {
+    min-width: 110px;
+    max-width: 100%;
+    flex: 1 1 45%;
+    margin-bottom: 0.5rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .settings-row {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem 0.1rem;
+  }
+  .settings-tile {
+    min-width: 90px;
+    padding: 0.3rem 0.1rem;
   }
 } 

@@ -1,30 +1,75 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { useProgress } from './ProgressContext';
+import { workoutData } from '../WorkoutData.js';
 import './ProgressPage.css';
 
 const ProgressPage = ({ userData }) => {
-  const [progressData, setProgressData] = useState({
-    currentStreak: 0,
-    totalWorkouts: 0,
-    thisWeekCompleted: 0,
-    thisWeekTotal: 7,
-    stats: {
-      totalCaloriesBurned: 0,
-      totalTimeSpent: 0,
-      averageWorkoutDuration: 0,
-      favoriteWorkoutType: 'None'
-    }
-  });
+  const { progress, getCurrentStreak, getTimeBasedProgress } = useProgress();
 
-  // Load progress data from localStorage
-  useEffect(() => {
-    const savedData = localStorage.getItem('workoutAppData');
-    if (savedData) {
-      const parsedData = JSON.parse(savedData);
-      if (parsedData.progress) {
-        setProgressData(parsedData.progress);
+  // Calculate total calories burned from completed exercises
+  const calculateTotalCaloriesBurned = () => {
+    let totalCalories = 0;
+    
+    // Loop through all dates in progress
+    Object.keys(progress.byDate).forEach(dateKey => {
+      const dayData = progress.byDate[dateKey];
+      const completedExercises = dayData?.exercises || {};
+      
+      // Get the day of the week for this date
+      const date = new Date(dateKey);
+      const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
+      
+      // Get workout data for this day
+      const workoutDayData = workoutData[dayName];
+      const warmupData = workoutData.Warmup;
+      
+      if (workoutDayData && workoutDayData.exercises) {
+        // Check warmup exercises
+        warmupData.exercises.forEach((exercise, index) => {
+          const exerciseId = `warmup_${index}`;
+          if (completedExercises[exerciseId]) {
+            totalCalories += exercise.caloriesBurn || 0;
+          }
+        });
+        
+        // Check main workout exercises
+        workoutDayData.exercises.forEach((exercise, index) => {
+          const exerciseId = `main_${index}`;
+          if (completedExercises[exerciseId]) {
+            totalCalories += exercise.caloriesBurn || 0;
+          }
+        });
       }
-    }
-  }, []);
+    });
+    
+    return totalCalories;
+  };
+
+  // Calculate total workouts completed
+  const calculateTotalWorkouts = () => {
+    let totalWorkouts = 0;
+    Object.keys(progress.byDate).forEach(dateKey => {
+      const dayData = progress.byDate[dateKey];
+      if (dayData?.status === 'done') {
+        totalWorkouts++;
+      }
+    });
+    return totalWorkouts;
+  };
+
+  // Calculate this week's progress
+  const calculateThisWeekProgress = () => {
+    const weekProgress = getTimeBasedProgress('week');
+    return {
+      completed: weekProgress.completed,
+      total: weekProgress.total
+    };
+  };
+
+  const totalCaloriesBurned = calculateTotalCaloriesBurned();
+  const totalWorkouts = calculateTotalWorkouts();
+  const currentStreak = getCurrentStreak();
+  const weekProgress = calculateThisWeekProgress();
 
   // Get user's first name or use default greeting
   const getGreeting = () => {
@@ -64,28 +109,28 @@ const ProgressPage = ({ userData }) => {
           <div className="stat-card">
             <div className="stat-icon">🔥</div>
             <div className="stat-content">
-              <div className="stat-value">{progressData.currentStreak}</div>
+              <div className="stat-value">{currentStreak}</div>
               <div className="stat-label">Battle Streak</div>
             </div>
           </div>
           <div className="stat-card">
             <div className="stat-icon">⚔️</div>
             <div className="stat-content">
-              <div className="stat-value">{progressData.totalWorkouts}</div>
+              <div className="stat-value">{totalWorkouts}</div>
               <div className="stat-label">Missions Completed</div>
             </div>
           </div>
           <div className="stat-card">
             <div className="stat-icon">⚡</div>
             <div className="stat-content">
-              <div className="stat-value">{formatTime(progressData.stats.totalTimeSpent)}</div>
+              <div className="stat-value">{formatTime(1800)}</div>
               <div className="stat-label">Total Training Time</div>
             </div>
           </div>
           <div className="stat-card">
             <div className="stat-icon">💪</div>
             <div className="stat-content">
-              <div className="stat-value">{progressData.stats.totalCaloriesBurned.toLocaleString()}</div>
+              <div className="stat-value">{totalCaloriesBurned.toLocaleString()}</div>
               <div className="stat-label">Calories Burned</div>
             </div>
           </div>
@@ -100,15 +145,15 @@ const ProgressPage = ({ userData }) => {
             <div className="progress-bar">
               <div 
                 className="progress-fill" 
-                style={{ width: `${getProgressPercentage(progressData.thisWeekCompleted, progressData.thisWeekTotal)}%` }}
+                style={{ width: `${getProgressPercentage(weekProgress.completed, 7)}%` }}
               ></div>
             </div>
             <div className="progress-text">
-              {progressData.thisWeekCompleted} of {progressData.thisWeekTotal} days completed
+              {weekProgress.completed} of 7 days completed
             </div>
           </div>
           <div className="progress-percentage">
-            {Math.round(getProgressPercentage(progressData.thisWeekCompleted, progressData.thisWeekTotal))}%
+            {Math.round(getProgressPercentage(weekProgress.completed, 7))}%
           </div>
         </div>
       </div>
@@ -121,28 +166,28 @@ const ProgressPage = ({ userData }) => {
             <div className="achievement-icon">🏆</div>
             <div className="achievement-content">
               <h3>Average Workout Duration</h3>
-              <p>{progressData.stats.averageWorkoutDuration} minutes</p>
+              <p>40 minutes</p>
             </div>
           </div>
           <div className="achievement-card">
             <div className="achievement-icon">⚔️</div>
             <div className="achievement-content">
               <h3>Favorite Training Type</h3>
-              <p>{progressData.stats.favoriteWorkoutType}</p>
+              <p>Dragon Training</p>
             </div>
           </div>
           <div className="achievement-card">
             <div className="achievement-icon">🔥</div>
             <div className="achievement-content">
               <h3>Current Streak</h3>
-              <p>{progressData.currentStreak} days</p>
+              <p>{currentStreak} days</p>
             </div>
           </div>
           <div className="achievement-card">
             <div className="achievement-icon">📈</div>
             <div className="achievement-content">
               <h3>Total Missions</h3>
-              <p>{progressData.totalWorkouts} completed</p>
+              <p>{totalWorkouts} completed</p>
             </div>
           </div>
         </div>
@@ -155,11 +200,11 @@ const ProgressPage = ({ userData }) => {
           <p>Every workout brings you closer to your ultimate form. Stay consistent, stay strong!</p>
           <div className="motivation-stats">
             <div className="motivation-stat">
-              <span className="stat-number">{progressData.currentStreak}</span>
+              <span className="stat-number">{currentStreak}</span>
               <span className="stat-label">Day Streak</span>
             </div>
             <div className="motivation-stat">
-              <span className="stat-number">{progressData.totalWorkouts}</span>
+              <span className="stat-number">{totalWorkouts}</span>
               <span className="stat-label">Total Workouts</span>
             </div>
           </div>

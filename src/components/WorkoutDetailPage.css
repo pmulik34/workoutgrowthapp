@@ -105,21 +105,36 @@
 }
 
 .day-status.future {
-  background: rgba(100, 150, 255, 0.1);
-  color: #6496ff;
-  border: 1px solid rgba(100, 150, 255, 0.3);
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-top: 8px;
+  display: inline-block;
 }
 
-.day-status.locked {
-  background: rgba(255, 100, 100, 0.1);
-  color: #ff6464;
-  border: 1px solid rgba(255, 100, 100, 0.3);
+.day-status.past {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-top: 8px;
+  display: inline-block;
 }
 
-.day-status.completed {
-  background: rgba(205, 251, 71, 0.1);
-  color: #CDFB47;
-  border: 1px solid rgba(205, 251, 71, 0.3);
+.day-status.current {
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-top: 8px;
+  display: inline-block;
 }
 
 /* Workout Content */
@@ -255,29 +270,34 @@
   border-color: rgba(150, 150, 150, 0.3);
 }
 
-/* Future Day Message */
-.future-day-message {
+/* Future Day Notice */
+.future-day-notice {
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
   border: 2px solid rgba(100, 150, 255, 0.3);
   border-radius: 20px;
-  padding: 2rem;
-  margin: 2rem 0;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
   text-align: center;
   box-shadow: 0 4px 16px rgba(100, 150, 255, 0.1);
 }
 
-.future-content h2 {
+.future-notice-content h3 {
   color: #6496ff;
-  font-size: 1.8rem;
-  margin: 0 0 1rem 0;
+  font-size: 1.4rem;
+  margin: 0 0 0.8rem 0;
   font-weight: 700;
 }
 
-.future-content p {
+.future-notice-content p {
   color: #B0B0B0;
-  font-size: 1.1rem;
-  line-height: 1.6;
-  margin: 0 0 1.5rem 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Future Day Message - Keep for backward compatibility but hide */
+.future-day-message {
+  display: none;
 }
 
 .future-preview {
@@ -777,6 +797,34 @@
   .exercise-info {
     margin-left: 0.8rem;
   }
+
+  /* Bulk Action Buttons Mobile */
+  .bulk-actions {
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-top: 1rem;
+  }
+
+  .bulk-action-btn {
+    padding: 0.7rem 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .bulk-action-btn .btn-text {
+    font-size: 0.75rem;
+  }
+
+  /* Section Subtitles Mobile */
+  .section-subtitle {
+    font-size: 0.9rem;
+    margin-bottom: 0.8rem;
+  }
+
+  /* Completed Exercises Mobile */
+  .completed-exercises {
+    margin-top: 1rem;
+    padding-top: 0.8rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1205,4 +1253,137 @@
     height: 26px;
     font-size: 0.9rem;
   }
+}
+
+/* Bulk Action Buttons */
+.bulk-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(205, 251, 71, 0.2);
+}
+
+.bulk-action-btn {
+  flex: 1;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  border: 2px solid rgba(205, 251, 71, 0.3);
+  border-radius: 12px;
+  padding: 0.8rem 1rem;
+  color: #FFFFFF;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: 'Poppins', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.bulk-action-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2d2d2d 0%, #3a3a3a 100%);
+  border-color: rgba(205, 251, 71, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(205, 251, 71, 0.2);
+}
+
+.bulk-action-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.bulk-action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: rgba(150, 150, 150, 0.2);
+}
+
+.bulk-action-btn.mark-all-done {
+  border-color: rgba(76, 175, 80, 0.3);
+  color: #4CAF50;
+}
+
+.bulk-action-btn.mark-all-done:hover:not(:disabled) {
+  border-color: rgba(76, 175, 80, 0.5);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+}
+
+.bulk-action-btn.mark-all-undone {
+  border-color: rgba(244, 67, 54, 0.3);
+  color: #F44336;
+}
+
+.bulk-action-btn.mark-all-undone:hover:not(:disabled) {
+  border-color: rgba(244, 67, 54, 0.5);
+  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.2);
+}
+
+.bulk-action-btn .btn-icon {
+  font-size: 1rem;
+}
+
+.bulk-action-btn .btn-text {
+  font-size: 0.8rem;
+}
+
+/* Section Subtitles */
+.section-subtitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #B0B0B0;
+  margin: 0 0 1rem 0;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(205, 251, 71, 0.1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.section-subtitle.completed {
+  color: #4CAF50;
+  border-bottom-color: rgba(76, 175, 80, 0.2);
+}
+
+/* Completed Exercises Section */
+.completed-exercises {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 2px solid rgba(76, 175, 80, 0.2);
+}
+
+.completed-exercises .exercise-item {
+  background: linear-gradient(135deg, #1a2e1a 0%, #263526 100%);
+  border-color: rgba(76, 175, 80, 0.3);
+  opacity: 0.8;
+}
+
+.completed-exercises .exercise-item:hover {
+  border-color: rgba(76, 175, 80, 0.5);
+  background: linear-gradient(135deg, #2d3a2d 0%, #3a4a3a 100%);
+  box-shadow: 0 8px 32px rgba(76, 175, 80, 0.15);
+}
+
+.completed-exercises .exercise-name {
+  color: #4CAF50;
+}
+
+.completed-exercises .exercise-duration {
+  background: rgba(76, 175, 80, 0.2);
+  border-color: rgba(76, 175, 80, 0.4);
+  color: #4CAF50;
+}
+
+.completed-exercises .play-button {
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
+.completed-exercises .play-button:hover {
+  box-shadow: 0 8px 28px rgba(76, 175, 80, 0.5);
+}
+
+.completed-exercises .play-icon {
+  color: #FFFFFF;
 } 

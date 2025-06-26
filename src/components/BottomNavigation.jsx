@@ -2,11 +2,12 @@ import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './BottomNavigation.css';
 
-// Import images
-import workoutIcon from '../assets/muscle.png';
-import dietIcon from '../assets/healthy-food.png';
-import progressIcon from '../assets/report.png';
-import profileIcon from '../assets/user.png';
+// Import new anime-themed navigation images
+import homeIcon from '../assets/Home.png';
+import workoutIcon from '../assets/workoutIcon.png';
+import glowUpIcon from '../assets/glowUp.png';
+import progressIcon from '../assets/Progress.png';
+import profileIcon from '../assets/Profile.png';
 
 const isEmoji = (icon) => {
   // If it's a single Unicode character or a short string, treat as emoji
@@ -21,7 +22,7 @@ const BottomNavigation = () => {
     {
       id: 'home',
       label: 'Home',
-      icon: '🏠',
+      icon: homeIcon,
       path: '/'
     },
     {
@@ -32,8 +33,8 @@ const BottomNavigation = () => {
     },
     {
       id: 'diet',
-      label: 'Diet',
-      icon: dietIcon,
+      label: 'GlowUp',
+      icon: glowUpIcon,
       path: '/diet'
     },
     {
@@ -64,6 +65,8 @@ const BottomNavigation = () => {
   const activeTab = getActiveTab();
 
   const handleTabClick = (path) => {
+    console.log('BottomNavigation - handleTabClick called with path:', path);
+    console.log('BottomNavigation - Current location:', location.pathname);
     navigate(path);
   };
 

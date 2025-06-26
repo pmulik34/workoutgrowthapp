@@ -1,5 +1,5 @@
 .workout-page {
-  background: url('../assets/yami.png') center center/cover no-repeat, var(--bg-primary);
+  background: url('../assets/zoro-bg.png') center center/cover no-repeat, var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;
   font-family: 'Poppins', sans-serif;
@@ -240,7 +240,28 @@
 
 /* Weekly Exercises */
 .weekly-exercises {
+  background: transparent;
+  border-radius: 16px;
+  padding: 2rem;
   margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(10px);
+}
+
+.weekly-exercises::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 15, 0.6);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.weekly-exercises > * {
+  position: relative;
+  z-index: 1;
 }
 
 .weekly-exercises h2 {
@@ -323,6 +344,14 @@
 }
 
 .exercise-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  z-index: 2;
+}
+
+.exercise-card-info {
   flex: 1;
 }
 
@@ -355,6 +384,51 @@
   text-shadow: var(--text-glow);
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+/* Exercise Progress Indicators */
+.exercise-progress-indicator {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 3;
+}
+
+.progress-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.progress-circle::before {
+  content: '';
+  position: absolute;
+  inset: 12px;
+  border-radius: 50%;
+  background: #fff;
+  z-index: 1;
+}
+
+.progress-text {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 2;
+}
+
+.progress-count {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--accent-green);
+  font-weight: 600;
+  margin-top: 0.2rem;
 }
 
 /* Mobile Responsiveness */
@@ -404,6 +478,19 @@
   .exercise-card {
     height: 160px;
   }
+  
+  .progress-circle {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .progress-text {
+    font-size: 0.65rem;
+  }
+  
+  .progress-count {
+    font-size: 0.75rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -447,5 +534,18 @@
   
   .exercise-card-type {
     font-size: 0.9rem;
+  }
+  
+  .progress-circle {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .progress-text {
+    font-size: 0.6rem;
+  }
+  
+  .progress-count {
+    font-size: 0.7rem;
   }
 } 

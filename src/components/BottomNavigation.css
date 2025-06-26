@@ -12,7 +12,7 @@
   align-items: center;
   padding: 0 1rem;
   z-index: 1000;
-  box-shadow: 0 -2px 12px 0 #cdfb4740, 0 -1px 8px 0 #00d4ff22;
+  box-shadow: 0 -2px 12px 0 rgba(74, 222, 128, 0.2), 0 -1px 8px 0 rgba(74, 222, 128, 0.1);
   /* Neon glow */
   transition: background 0.3s;
   position: relative;
@@ -52,23 +52,29 @@
 }
 
 .nav-tab:hover {
-  background: rgba(205, 251, 71, 0.04);
+  background: rgba(74, 222, 128, 0.05);
+  backdrop-filter: blur(5px);
   color: var(--accent-green);
-  box-shadow: 0 0 4px 1px #cdfb4720, 0 0 2px 0 #00d4ff22;
+  border: 1px solid rgba(74, 222, 128, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .nav-tab.active {
   color: var(--accent-green);
-  background: linear-gradient(90deg, #232946 60%, #cdfb47 100%);
-  box-shadow: 0 0 8px 2px #cdfb4730, 0 0 6px 0 #00d4ff33;
-  border: 1.5px solid var(--accent-green);
+  background: rgba(74, 222, 128, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(74, 222, 128, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .nav-tab.active .nav-icon,
 .nav-tab.active .nav-icon-img,
 .nav-tab.active .nav-icon-svg,
 .nav-tab.active .nav-icon-emoji {
-  filter: drop-shadow(0 0 3px #cdfb47) drop-shadow(0 0 2px #00d4ff);
+  filter: drop-shadow(0 0 3px rgba(74, 222, 128, 0.8)) drop-shadow(0 0 2px rgba(74, 222, 128, 0.6));
 }
 
 .nav-tab .nav-icon,
@@ -81,7 +87,7 @@
 .nav-tab:hover .nav-icon-img,
 .nav-tab:hover .nav-icon-svg,
 .nav-tab:hover .nav-icon-emoji {
-  filter: drop-shadow(0 0 2px #cdfb47) drop-shadow(0 0 1px #00d4ff);
+  filter: drop-shadow(0 0 2px rgba(74, 222, 128, 0.6)) drop-shadow(0 0 1px rgba(74, 222, 128, 0.4));
 }
 
 .nav-icon {
@@ -120,7 +126,7 @@
   letter-spacing: 0.5px;
   text-transform: capitalize;
   line-height: 1;
-  text-shadow: 0 0 2px #cdfb4720, 0 0 1px #00d4ff22;
+  text-shadow: 0 0 2px rgba(74, 222, 128, 0.3), 0 0 1px rgba(74, 222, 128, 0.2);
 }
 
 /* Mobile responsiveness */

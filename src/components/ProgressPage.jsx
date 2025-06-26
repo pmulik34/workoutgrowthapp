@@ -1,195 +1,173 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useProgress } from './ProgressContext';
+import DailyProgressBar from './DailyProgressBar';
+import ProgressCalendar from './ProgressCalendar';
+import AchievementBadges from './AchievementBadges';
 import './ProgressPage.css';
 
-const ProgressPage = ({ userData }) => {
-  // Get user's first name or use default greeting
-  const getGreeting = () => {
-    if (userData && userData.name && userData.name.trim()) {
-      const firstName = userData.name.trim().split(' ')[0];
-      return `Your Journey, ${firstName}! 📊`;
+export default function ProgressPage() {
+  const { getTimeBasedProgress } = useProgress();
+  const [timeFrame, setTimeFrame] = useState('today');
+  
+  const timeFrameData = getTimeBasedProgress(timeFrame);
+  
+  const timeFrameOptions = [
+    { key: 'today', label: 'Today', icon: '🌞' },
+    { key: 'week', label: 'This Week', icon: '📅' },
+    { key: 'month', label: 'This Month', icon: '📊' }
+  ];
+
+  const getProgressColor = (percentage) => {
+    if (percentage >= 80) return 'var(--accent-green)';
+    if (percentage >= 60) return 'var(--accent-blue)';
+    if (percentage >= 40) return '#f59e0b';
+    return '#ef4444';
+  };
+
+  const getTimeFrameStats = () => {
+    const total = timeFrameData.total;
+    const completed = timeFrameData.completed;
+    let percentage = 0;
+    if (timeFrame === 'today') {
+      percentage = total > 0 ? (completed / total) * 100 : 0;
+    } else {
+      percentage = total > 0 ? (completed / total) * 100 : 0;
     }
-    return 'Your Journey, Warrior! 📊';
+    return {
+      total,
+      completed,
+      percentage: Math.round(percentage),
+      color: getProgressColor(percentage)
+    };
   };
 
-  // Mock progress data (in a real app, this would come from user's actual data)
-  const progressData = {
-    currentStreak: userData?.currentStreak || 7,
-    totalWorkouts: userData?.totalWorkouts || 45,
-    weeklyGoal: 5,
-    weeklyCompleted: 4,
-    monthlyGoal: 20,
-    monthlyCompleted: 18,
-    achievements: [
-      { id: 1, name: 'First Steps', description: 'Complete your first workout', icon: '🎯', unlocked: true, date: '2024-01-15' },
-      { id: 2, name: 'Week Warrior', description: 'Complete 7 workouts in a week', icon: '🔥', unlocked: true, date: '2024-01-22' },
-      { id: 3, name: 'Consistency King', description: 'Maintain a 30-day streak', icon: '👑', unlocked: true, date: '2024-02-10' },
-      { id: 4, name: 'Strength Master', description: 'Complete 50 strength workouts', icon: '💪', unlocked: false, progress: 35 },
-      { id: 5, name: 'Endurance Legend', description: 'Complete 25 cardio sessions', icon: '⚡', unlocked: false, progress: 18 },
-      { id: 6, name: 'Flexibility Guru', description: 'Complete 30 flexibility workouts', icon: '🧘', unlocked: false, progress: 12 }
-    ],
-    weeklyProgress: [
-      { day: 'Mon', completed: true, type: 'Dragon Training' },
-      { day: 'Tue', completed: true, type: 'Ninja Agility' },
-      { day: 'Wed', completed: true, type: 'Core Mastery' },
-      { day: 'Thu', completed: true, type: 'Spirit Flexibility' },
-      { day: 'Fri', completed: false, type: 'Endurance Test' },
-      { day: 'Sat', completed: false, type: 'Rest & Recovery' },
-      { day: 'Sun', completed: false, type: 'Hero Strength' }
-    ],
-    stats: {
-      totalCaloriesBurned: 12500,
-      totalTimeSpent: 1800, // in minutes
-      averageWorkoutDuration: 40,
-      favoriteWorkoutType: 'Dragon Training'
+  const stats = getTimeFrameStats();
+
+  const getStatLabels = () => {
+    if (timeFrame === 'today') {
+      return {
+        completed: 'Exercises Completed',
+        total: 'Total Exercises',
+        rate: 'Completion Rate',
+        progressText: `${stats.completed} of ${stats.total} exercises completed`
+      };
+    } else {
+      return {
+        completed: 'Workout Days Completed',
+        total: 'Total Workout Days',
+        rate: 'Completion Rate',
+        progressText: `${stats.completed} of ${stats.total} workout days completed`
+      };
     }
   };
 
-  const formatTime = (minutes) => {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    return `${hours}h ${mins}m`;
-  };
-
-  const getProgressPercentage = (completed, goal) => {
-    return Math.min((completed / goal) * 100, 100);
-  };
+  const labels = getStatLabels();
 
   return (
     <div className="progress-page">
-      {/* Greeting Section */}
-      <div className="greeting-section">
-        <h1>{getGreeting()}</h1>
-        <p className="tagline">Track your epic transformation and celebrate your victories!</p>
-        <div className="anime-quote">
-          <p>"The journey of a thousand miles begins with a single step."</p>
-          <span className="quote-author">- Lao Tzu</span>
-        </div>
+      <div className="progress-page-header">
+        <h1 className="progress-page-title">Progress Tracker</h1>
+        <p className="progress-page-subtitle">Track your fitness journey and celebrate achievements</p>
       </div>
 
-      {/* Current Stats */}
-      <div className="current-stats">
-        <h2>Your Power Level</h2>
-        <div className="stats-grid">
-          <div className="stat-card">
-            <div className="stat-icon">🔥</div>
-            <div className="stat-content">
-              <div className="stat-value">{progressData.currentStreak}</div>
-              <div className="stat-label">Battle Streak</div>
-            </div>
+      {/* Daily Progress Bar */}
+      <DailyProgressBar />
+
+      {/* Time-based Progress Tracking */}
+      <div className="time-progress-section">
+        <div className="time-progress-header">
+          <h3 className="time-progress-title">Progress Overview</h3>
+          <div className="time-frame-selector">
+            {timeFrameOptions.map((option) => (
+              <button
+                key={option.key}
+                className={`time-frame-btn ${timeFrame === option.key ? 'active' : ''}`}
+                onClick={() => setTimeFrame(option.key)}
+              >
+                <span className="time-frame-icon">{option.icon}</span>
+                <span className="time-frame-label">{option.label}</span>
+              </button>
+            ))}
           </div>
-          <div className="stat-card">
-            <div className="stat-icon">⚔️</div>
-            <div className="stat-content">
-              <div className="stat-value">{progressData.totalWorkouts}</div>
-              <div className="stat-label">Missions Completed</div>
             </div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-icon">⚡</div>
-            <div className="stat-content">
-              <div className="stat-value">{formatTime(progressData.stats.totalTimeSpent)}</div>
-              <div className="stat-label">Total Training Time</div>
-            </div>
-          </div>
+
+        <div className="time-progress-content">
+          <div className="time-progress-stats">
           <div className="stat-card">
             <div className="stat-icon">💪</div>
             <div className="stat-content">
-              <div className="stat-value">{progressData.stats.totalCaloriesBurned.toLocaleString()}</div>
-              <div className="stat-label">Calories Burned</div>
-            </div>
-          </div>
+                <h4 className="stat-value">{stats.completed}</h4>
+                <p className="stat-label">{labels.completed}</p>
         </div>
       </div>
 
-      {/* Weekly Progress */}
-      <div className="weekly-progress">
-        <h2>This Week's Quest</h2>
-        <div className="progress-bar-container">
-          <div className="progress-info">
-            <span className="progress-text">{progressData.weeklyCompleted}/{progressData.weeklyGoal} completed</span>
-            <span className="progress-percentage">{getProgressPercentage(progressData.weeklyCompleted, progressData.weeklyGoal)}%</span>
-          </div>
-          <div className="progress-bar">
-            <div 
-              className="progress-fill" 
-              style={{ width: `${getProgressPercentage(progressData.weeklyCompleted, progressData.weeklyGoal)}%` }}
-            ></div>
+            <div className="stat-card">
+              <div className="stat-icon">🎯</div>
+              <div className="stat-content">
+                <h4 className="stat-value">{stats.total}</h4>
+                <p className="stat-label">{labels.total}</p>
           </div>
         </div>
         
-        <div className="weekly-calendar">
-          {progressData.weeklyProgress.map((day, index) => (
-            <div key={index} className={`day-item ${day.completed ? 'completed' : ''}`}>
-              <div className="day-name">{day.day}</div>
-              <div className="day-status">
-                {day.completed ? (
-                  <span className="status-icon">✅</span>
-                ) : (
-                  <span className="status-icon">⏳</span>
-                )}
+            <div className="stat-card">
+              <div className="stat-icon">📊</div>
+              <div className="stat-content">
+                <h4 className="stat-value" style={{ color: stats.color }}>
+                  {stats.percentage}%
+                </h4>
+                <p className="stat-label">{labels.rate}</p>
               </div>
-              <div className="day-type">{day.type}</div>
-            </div>
-          ))}
         </div>
       </div>
 
-      {/* Achievements */}
-      <div className="achievements-section">
-        <h2>Hero Achievements</h2>
-        <div className="achievements-grid">
-          {progressData.achievements.map((achievement) => (
-            <div key={achievement.id} className={`achievement-card ${achievement.unlocked ? 'unlocked' : 'locked'}`}>
-              <div className="achievement-icon">{achievement.icon}</div>
-              <div className="achievement-content">
-                <h3>{achievement.name}</h3>
-                <p>{achievement.description}</p>
-                {achievement.unlocked ? (
-                  <span className="unlock-date">Unlocked: {achievement.date}</span>
-                ) : (
-                  <div className="progress-indicator">
-                    <span className="progress-text">{achievement.progress}%</span>
-                    <div className="mini-progress-bar">
+          {stats.total > 0 && (
+            <div className="time-progress-bar-container">
+              <div className="time-progress-bar">
                       <div 
-                        className="mini-progress-fill" 
-                        style={{ width: `${achievement.progress}%` }}
-                      ></div>
+                  className="time-progress-fill"
+                  style={{ 
+                    width: `${stats.percentage}%`,
+                    backgroundColor: stats.color
+                  }}
+                />
                     </div>
-                  </div>
-                )}
+              <div className="time-progress-text">
+                {labels.progressText}
               </div>
             </div>
-          ))}
+          )}
         </div>
       </div>
 
-      {/* Monthly Goal */}
-      <div className="monthly-goal">
-        <h2>Monthly Challenge</h2>
-        <div className="goal-card">
-          <div className="goal-header">
-            <div className="goal-icon">🎯</div>
-            <div className="goal-info">
-              <h3>Complete {progressData.monthlyGoal} Workouts</h3>
-              <p>Stay consistent and build your strength!</p>
+      {/* Progress Calendar */}
+      <ProgressCalendar />
+
+      {/* Achievement Badges */}
+      <AchievementBadges />
+
+      {/* Progress Tips */}
+      <div className="progress-tips-section">
+        <h3 className="progress-tips-title">💡 Progress Tips</h3>
+        <div className="progress-tips-grid">
+          <div className="tip-card">
+            <div className="tip-icon">🔥</div>
+            <h4 className="tip-title">Maintain Your Streak</h4>
+            <p className="tip-description">Consistency is key! Try to work out at least 3-4 times per week to build momentum.</p>
             </div>
+          
+          <div className="tip-card">
+            <div className="tip-icon">🎯</div>
+            <h4 className="tip-title">Set Realistic Goals</h4>
+            <p className="tip-description">Start with achievable targets and gradually increase intensity as you progress.</p>
           </div>
-          <div className="goal-progress">
-            <div className="progress-info">
-              <span className="progress-text">{progressData.monthlyCompleted}/{progressData.monthlyGoal}</span>
-              <span className="progress-percentage">{getProgressPercentage(progressData.monthlyCompleted, progressData.monthlyGoal)}%</span>
-            </div>
-            <div className="progress-bar">
-              <div 
-                className="progress-fill" 
-                style={{ width: `${getProgressPercentage(progressData.monthlyCompleted, progressData.monthlyGoal)}%` }}
-              ></div>
-            </div>
+          
+          <div className="tip-card">
+            <div className="tip-icon">📈</div>
+            <h4 className="tip-title">Track Your Progress</h4>
+            <p className="tip-description">Use this calendar to visualize your consistency and celebrate your achievements.</p>
           </div>
         </div>
       </div>
     </div>
   );
-};
-
-export default ProgressPage; 
+} 

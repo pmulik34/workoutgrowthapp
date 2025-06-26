@@ -1,5 +1,5 @@
 .diet-page {
-  background: url('../assets/onepiece.png') center center/cover no-repeat, var(--bg-primary);
+  background: url('../assets/zoro-bg.png') center center/cover no-repeat, var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;
   font-family: 'Poppins', sans-serif;
@@ -78,7 +78,28 @@
 
 /* Nutrition Stats */
 .nutrition-stats {
+  background: transparent;
+  border-radius: 16px;
+  padding: 2rem;
   margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(10px);
+}
+
+.nutrition-stats::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 15, 0.6);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.nutrition-stats > * {
+  position: relative;
+  z-index: 1;
 }
 
 .nutrition-stats h2 {
@@ -163,7 +184,28 @@
 
 /* Meal Categories */
 .meal-categories {
+  background: transparent;
+  border-radius: 16px;
+  padding: 2rem;
   margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(10px);
+}
+
+.meal-categories::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 15, 0.6);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.meal-categories > * {
+  position: relative;
+  z-index: 1;
 }
 
 .meal-categories h2 {
@@ -338,7 +380,28 @@
 
 /* Hydration Section */
 .hydration-section {
+  background: transparent;
+  border-radius: 16px;
+  padding: 2rem;
   margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(10px);
+}
+
+.hydration-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 15, 0.6);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hydration-section > * {
+  position: relative;
+  z-index: 1;
 }
 
 .hydration-card {

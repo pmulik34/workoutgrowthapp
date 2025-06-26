@@ -1,16 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useProgress } from './ProgressContext';
 import './WorkoutDetailPage.css';
 import { workoutData } from '../WorkoutData.js';
 
 const WorkoutDetailPage = () => {
   const { day } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { markExerciseAsDone, getTodayProgress, getTodayKey, initializeExercisesForDay, getDayProgress } = useProgress();
   const [completedExercises, setCompletedExercises] = useState(new Set());
   const [isLocked, setIsLocked] = useState(false);
 
   // Capitalize the day parameter to match workoutData keys
   const selectedDay = day ? day.charAt(0).toUpperCase() + day.slice(1) : null;
+
+  // Get workout data early
+  const dayData = workoutData[selectedDay];
+  const warmupData = workoutData.Warmup;
+  const isRecoveryDay = dayData?.type === 'recovery';
 
   // Get current week info
   const getCurrentWeekInfo = () => {
@@ -31,240 +39,196 @@ const WorkoutDetailPage = () => {
     };
   };
 
-  // Initialize or get workout data structure
-  const initializeWorkoutData = () => {
-    const { weekId } = getCurrentWeekInfo();
-    let workoutDataStore = JSON.parse(localStorage.getItem('workoutDataStore')) || {};
-    
-    // Check if we need to start a new week (reset previous week's checkmarks)
-    if (!workoutDataStore.currentWeek || workoutDataStore.currentWeek !== weekId) {
-      // New week detected - reset all exercise checkmarks but keep completion history
-      workoutDataStore = {
-        currentWeek: weekId,
-        weeklyProgress: {}, // Reset weekly exercise checkmarks
-        completionHistory: workoutDataStore.completionHistory || {}, // Keep historical completion data
-        statistics: workoutDataStore.statistics || {
-          totalWorkouts: 0,
-          currentStreak: 0,
-          lastWorkoutDate: null
-        }
-      };
-      
-      localStorage.setItem('workoutDataStore', JSON.stringify(workoutDataStore));
-    }
-    
-    return workoutDataStore;
-  };
-
-  // Update main app progress data
-  const updateMainAppProgress = (workoutDataStore) => {
-    const savedData = localStorage.getItem('workoutAppData');
-    if (savedData) {
-      const appData = JSON.parse(savedData);
-      
-      // Calculate this week's completed workouts
-      const { weekId } = getCurrentWeekInfo();
-      const workoutDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-      let thisWeekCompleted = 0;
-      
-      workoutDays.forEach(day => {
-        const dayCompletionKey = `${weekId}_${day}`;
-        if (workoutDataStore.completionHistory?.[dayCompletionKey]?.completed) {
-          thisWeekCompleted++;
-        }
-      });
-
-      // Update progress data
-      appData.progress = {
-        currentStreak: workoutDataStore.statistics.currentStreak || 0,
-        totalWorkouts: workoutDataStore.statistics.totalWorkouts || 0,
-        thisWeekCompleted: thisWeekCompleted,
-        thisWeekTotal: 7,
-        stats: {
-          totalCaloriesBurned: appData.progress?.stats?.totalCaloriesBurned || 0,
-          totalTimeSpent: appData.progress?.stats?.totalTimeSpent || 0,
-          averageWorkoutDuration: appData.progress?.stats?.averageWorkoutDuration || 0,
-          favoriteWorkoutType: appData.progress?.stats?.favoriteWorkoutType || 'None'
-        }
-      };
-
-      // Update user data
-      appData.user = {
-        ...appData.user,
-        currentStreak: workoutDataStore.statistics.currentStreak || 0,
-        totalWorkouts: workoutDataStore.statistics.totalWorkouts || 0
-      };
-
-      localStorage.setItem('workoutAppData', JSON.stringify(appData));
-    }
-  };
-
-  // Check if user can interact with this day's workout
-  const checkDayAccessibility = () => {
+  // Helper to get the dateKey for the selected day in the current week
+  const getSelectedDayKey = () => {
+    const workoutDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
     const today = new Date();
     const currentDayName = today.toLocaleDateString('en-US', { weekday: 'long' });
-    
-    // Recovery days are always accessible (but no checkboxes anyway)
-    if (workoutData[selectedDay]?.type === 'recovery') {
-      return true;
-    }
-    
-    // Define workout day order
-    const workoutDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
     const todayIndex = workoutDays.indexOf(currentDayName);
     const selectedDayIndex = workoutDays.indexOf(selectedDay);
-    
-    // Can't access future days beyond today
-    if (selectedDayIndex > todayIndex) {
-      return false;
-    }
-    
-    // Can access today
-    if (selectedDayIndex === todayIndex) {
-      return true;
-    }
-    
-    // For past days, check if they were completed when they were "today"
-    const { weekId } = getCurrentWeekInfo();
-    const workoutDataStore = JSON.parse(localStorage.getItem('workoutDataStore')) || {};
-    const dayCompletionKey = `${weekId}_${selectedDay}`;
-    
-    // If past day was completed, can still view but not modify
-    // If past day was missed, can only view (locked)
-    return workoutDataStore.completionHistory?.[dayCompletionKey] ? 'view-only' : 'locked';
+    const selectedDate = new Date(today);
+    selectedDate.setDate(today.getDate() + (selectedDayIndex - todayIndex));
+    return selectedDate.toISOString().slice(0, 10);
   };
 
-  // Load saved progress from localStorage
+  // Load saved progress from ProgressContext
   useEffect(() => {
-    if (selectedDay) {
-      const workoutDataStore = initializeWorkoutData();
-      const { weekId } = getCurrentWeekInfo();
-      const dayProgressKey = `${weekId}_${selectedDay}`;
+    if (selectedDay && dayData) {
+      const selectedDayKey = getSelectedDayKey();
+      const dayProgress = getDayProgress(selectedDayKey);
       
-      // Load this week's progress for this day
-      const dayProgress = workoutDataStore.weeklyProgress?.[dayProgressKey] || [];
-      setCompletedExercises(new Set(dayProgress));
+      // Load completed exercises from progress context
+      const completedIds = Object.keys(dayProgress.exercises || {}).filter(
+        id => dayProgress.exercises[id]
+      );
+      setCompletedExercises(new Set(completedIds));
       
-      // Check accessibility
-      const accessibility = checkDayAccessibility();
-      setIsLocked(accessibility === 'locked');
+      // Check if this is a future day or past day (but don't lock access to content)
+      const today = new Date();
+      const currentDayName = today.toLocaleDateString('en-US', { weekday: 'long' });
+      const workoutDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+      const todayIndex = workoutDays.indexOf(currentDayName);
+      const selectedDayIndex = workoutDays.indexOf(selectedDay);
+      
+      // Set locked status for future days AND past days (prevents marking as completed)
+      setIsLocked(selectedDayIndex !== todayIndex);
     }
-  }, [selectedDay]);
+  }, [selectedDay, dayData, warmupData, isRecoveryDay, getDayProgress, location.pathname]);
 
-  // Save progress to localStorage whenever completedExercises changes
+  // Separate effect to initialize exercises only once for current day
   useEffect(() => {
-    if (selectedDay) {
-      const workoutDataStore = initializeWorkoutData();
-      const { weekId } = getCurrentWeekInfo();
-      const dayProgressKey = `${weekId}_${selectedDay}`;
+    if (selectedDay && dayData && !isRecoveryDay) {
+      const today = new Date();
+      const currentDayName = today.toLocaleDateString('en-US', { weekday: 'long' });
       
-      // Update weekly progress
-      workoutDataStore.weeklyProgress[dayProgressKey] = [...completedExercises];
-      
-      // Check if workout is completed and update completion status
-      checkWorkoutCompletion(workoutDataStore, weekId);
-      
-      localStorage.setItem('workoutDataStore', JSON.stringify(workoutDataStore));
-      
-      // Update main app progress data
-      updateMainAppProgress(workoutDataStore);
-    }
-  }, [completedExercises, selectedDay]);
-
-  // Check if the entire workout is completed
-  const checkWorkoutCompletion = (workoutDataStore, weekId) => {
-    const dayData = workoutData[selectedDay];
-    if (dayData?.type === 'recovery') return; // Skip for recovery days
-    
-    const warmupData = workoutData.Warmup;
-    const totalExercises = (warmupData?.exercises?.length || 0) + (dayData?.exercises?.length || 0);
-    
-    const isCompleted = completedExercises.size === totalExercises;
-    const dayCompletionKey = `${weekId}_${selectedDay}`;
-    
-    if (isCompleted) {
-      // Mark day as completed in history
-      workoutDataStore.completionHistory[dayCompletionKey] = {
-        completed: true,
-        completedDate: new Date().toISOString(),
-        totalExercises: totalExercises
-      };
-      
-      // Update statistics
-      updateProgressStats(workoutDataStore, dayCompletionKey);
-    } else {
-      // Remove completion if unchecked
-      if (workoutDataStore.completionHistory[dayCompletionKey]) {
-        delete workoutDataStore.completionHistory[dayCompletionKey];
-      }
-    }
-  };
-
-  // Update progress statistics
-  const updateProgressStats = (workoutDataStore, dayCompletionKey) => {
-    const today = new Date().toISOString().split('T')[0];
-    const stats = workoutDataStore.statistics;
-    
-    // Check if this completion was already counted
-    const alreadyCounted = workoutDataStore.completionHistory[dayCompletionKey]?.counted;
-    
-    if (!alreadyCounted) {
-      stats.totalWorkouts += 1;
-      workoutDataStore.completionHistory[dayCompletionKey].counted = true;
-      
-      // Update streak
-      if (stats.lastWorkoutDate) {
-        const lastDate = new Date(stats.lastWorkoutDate);
-        const todayDate = new Date(today);
-        const diffTime = todayDate - lastDate;
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      if (selectedDay === currentDayName) {
+        const selectedDayKey = getSelectedDayKey();
+        const todayProgress = getDayProgress(selectedDayKey);
+        const existingExercises = Object.keys(todayProgress.exercises || {});
         
-        if (diffDays === 1) {
-          stats.currentStreak += 1;
-        } else if (diffDays > 1) {
-          stats.currentStreak = 1;
+        // Only initialize if no exercises exist for today
+        if (existingExercises.length === 0) {
+          // Initialize exercises in progress context
+          const warmupExercises = warmupData?.exercises || [];
+          const mainExercises = dayData?.exercises || [];
+          
+          // Create exercise IDs
+          const allExercises = [
+            ...warmupExercises.map((_, index) => `warmup_${index}`),
+            ...mainExercises.map((_, index) => `main_${index}`)
+          ];
+          
+          // Initialize all exercises at once
+          if (allExercises.length > 0) {
+            initializeExercisesForDay(selectedDayKey, allExercises);
+          }
         }
-      } else {
-        stats.currentStreak = 1;
       }
-      
-      stats.lastWorkoutDate = today;
     }
-  };
+  }, [selectedDay, dayData, warmupData, isRecoveryDay, getDayProgress, initializeExercisesForDay]);
+
+  // Effect to handle navigation when location changes
+  useEffect(() => {
+    // Handle navigation changes
+  }, [location.pathname]);
+
+  // Cleanup effect when component unmounts
+  useEffect(() => {
+    return () => {
+      // Cleanup when component unmounts
+    };
+  }, []);
 
   // Handle back navigation
   const handleBack = () => {
-    navigate('/workout');
+    navigate('/workout', { replace: true });
   };
 
   if (!selectedDay) {
-    navigate('/workout');
+    navigate('/workout', { replace: true });
     return null;
   }
 
-  const dayData = workoutData[selectedDay];
-  const warmupData = workoutData.Warmup;
-
-  // Check if this is a recovery day
-  const isRecoveryDay = dayData?.type === 'recovery';
-
   // Calculate total exercises (warmup + main workout) - only for non-recovery days
   const totalExercises = isRecoveryDay ? 0 : (warmupData?.exercises?.length || 0) + (dayData?.exercises?.length || 0);
-  const completedCount = completedExercises.size;
+  
+  // Calculate completed exercises correctly - only count exercises that exist for this day
+  const getCompletedCount = () => {
+    if (isRecoveryDay) return 0;
+    
+    let completedCount = 0;
+    
+    // Count completed warmup exercises
+    if (warmupData?.exercises) {
+      warmupData.exercises.forEach((_, index) => {
+        if (completedExercises.has(`warmup_${index}`)) {
+          completedCount++;
+        }
+      });
+    }
+    
+    // Count completed main exercises
+    if (dayData?.exercises) {
+      dayData.exercises.forEach((_, index) => {
+        if (completedExercises.has(`main_${index}`)) {
+          completedCount++;
+        }
+      });
+    }
+    
+    return completedCount;
+  };
+  
+  const completedCount = getCompletedCount();
   const progressPercentage = totalExercises > 0 ? Math.round((completedCount / totalExercises) * 100) : 0;
 
   // Toggle exercise completion (only if not locked)
   const toggleExerciseCompletion = (exerciseId) => {
-    if (isLocked) return; // Prevent interaction if locked
+    if (isLocked) return;
     
-    setCompletedExercises(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(exerciseId)) {
+    const selectedDayKey = getSelectedDayKey();
+    const isCompleted = completedExercises.has(exerciseId);
+    
+    if (isCompleted) {
+      // Remove from completed set
+      setCompletedExercises(prev => {
+        const newSet = new Set(prev);
         newSet.delete(exerciseId);
-      } else {
-        newSet.add(exerciseId);
-      }
-      return newSet;
+        return newSet;
+      });
+      // Mark as not done in progress context
+      markExerciseAsDone(selectedDayKey, exerciseId, false);
+    } else {
+      // Add to completed set
+      setCompletedExercises(prev => {
+        const newSet = new Set([...prev, exerciseId]);
+        return newSet;
+      });
+      // Mark as done in progress context
+      markExerciseAsDone(selectedDayKey, exerciseId, true);
+    }
+  };
+
+  // Mark all exercises as done
+  const markAllAsDone = () => {
+    if (isLocked || isRecoveryDay) return;
+    
+    const selectedDayKey = getSelectedDayKey();
+    const warmupExercises = warmupData?.exercises || [];
+    const mainExercises = dayData?.exercises || [];
+    
+    const allExercises = [
+      ...warmupExercises.map((_, index) => `warmup_${index}`),
+      ...mainExercises.map((_, index) => `main_${index}`)
+    ];
+    
+    const newCompletedSet = new Set(allExercises);
+    setCompletedExercises(newCompletedSet);
+    
+    // Mark all exercises as done in progress context
+    allExercises.forEach(exerciseId => {
+      markExerciseAsDone(selectedDayKey, exerciseId, true);
+    });
+  };
+
+  // Mark all exercises as undone
+  const markAllAsUndone = () => {
+    if (isLocked || isRecoveryDay) return;
+    
+    const selectedDayKey = getSelectedDayKey();
+    const warmupExercises = warmupData?.exercises || [];
+    const mainExercises = dayData?.exercises || [];
+    
+    const allExercises = [
+      ...warmupExercises.map((_, index) => `warmup_${index}`),
+      ...mainExercises.map((_, index) => `main_${index}`)
+    ];
+    
+    setCompletedExercises(new Set());
+    
+    // Mark all exercises as not done in progress context
+    allExercises.forEach(exerciseId => {
+      markExerciseAsDone(selectedDayKey, exerciseId, false);
     });
   };
 
@@ -304,6 +268,7 @@ const WorkoutDetailPage = () => {
   const selectedDayIndex = workoutDays.indexOf(selectedDay);
   const isFutureDay = selectedDayIndex > todayIndex;
   const isPastDay = selectedDayIndex < todayIndex;
+  const isCurrentDay = selectedDayIndex === todayIndex;
 
   return (
     <div className="workout-detail-page">
@@ -319,19 +284,19 @@ const WorkoutDetailPage = () => {
           </p>
           {/* Show status indicators */}
           {isFutureDay && !isRecoveryDay && (
-            <div className="day-status future">🔮 Future Workout</div>
+            <div className="day-status future">🔮 Preview Mode - Videos Available</div>
           )}
-          {isPastDay && isLocked && !isRecoveryDay && (
-            <div className="day-status locked">🔒 Missed - View Only</div>
+          {isPastDay && !isRecoveryDay && (
+            <div className="day-status past">📅 Past Day - View Only</div>
           )}
-          {isPastDay && !isLocked && !isRecoveryDay && (
-            <div className="day-status completed">✅ Completed</div>
+          {isCurrentDay && !isRecoveryDay && (
+            <div className="day-status current">⚡ Today's Workout - Ready to Train!</div>
           )}
         </div>
       </div>
 
-      {/* Progress Section - Only show for non-recovery days and not future days */}
-      {!isRecoveryDay && !isFutureDay && (
+      {/* Progress Section - Only show for current day */}
+      {!isRecoveryDay && isCurrentDay && (
         <div className="progress-section">
           <div className="progress-header">
             <h3>Workout Progress</h3>
@@ -346,23 +311,40 @@ const WorkoutDetailPage = () => {
             </div>
             <span className="progress-percentage">{progressPercentage}%</span>
           </div>
+          
+          {/* Bulk Action Buttons */}
+          <div className="bulk-actions">
+            <button 
+              className="bulk-action-btn mark-all-done"
+              onClick={markAllAsDone}
+              disabled={completedCount === totalExercises}
+            >
+              <span className="btn-icon">✅</span>
+              <span className="btn-text">Mark All Done</span>
+            </button>
+            <button 
+              className="bulk-action-btn mark-all-undone"
+              onClick={markAllAsUndone}
+              disabled={completedCount === 0}
+            >
+              <span className="btn-icon">❌</span>
+              <span className="btn-text">Mark All Undone</span>
+            </button>
+          </div>
         </div>
       )}
 
-      {/* Future Day Message */}
-      {isFutureDay && !isRecoveryDay && (
-        <div className="future-day-message">
-          <div className="future-content">
-            <h2>🔮 Future Workout</h2>
-            <p>This workout will be available on {selectedDay}. Come back then to start your training!</p>
-            <div className="future-preview">
-              <h3>What's planned:</h3>
-              <ul>
-                <li>{warmupData.exercises.length} warmup exercises</li>
-                <li>{dayData.exercises.length} main exercises</li>
-                <li>Estimated duration: {Math.round((warmupData.exercises.length + dayData.exercises.length) * 2.5)} minutes</li>
-              </ul>
-            </div>
+      {/* Future Day Notice - Show but don't block content */}
+      {(isFutureDay || isPastDay) && !isRecoveryDay && (
+        <div className="future-day-notice">
+          <div className="future-notice-content">
+            <h3>{isFutureDay ? '🔮 Preview Mode' : '📅 Past Day'}</h3>
+            <p>
+              {isFutureDay 
+                ? `You can view the workout and access exercise videos, but you can't mark exercises as completed until ${selectedDay}.`
+                : 'You can view the workout and access exercise videos, but you can\'t modify the exercise status for past days.'
+              }
+            </p>
           </div>
         </div>
       )}
@@ -404,8 +386,8 @@ const WorkoutDetailPage = () => {
               </div>
             </div>
           </div>
-        ) : !isFutureDay ? (
-          /* Regular Workout Content - Only show if not future day */
+        ) : (
+          /* Regular Workout Content - Show for all days including future */
           <>
             {/* Warmup Section */}
             <div className="workout-section">
@@ -413,66 +395,72 @@ const WorkoutDetailPage = () => {
                 <h2>Warmup</h2>
                 <span className="section-count">{warmupData.exercises.length} exercises</span>
               </div>
-              <div className="exercise-list">
-                {warmupData.exercises.map((exercise, index) => {
-                  const exerciseId = `warmup_${index}`;
-                  const isCompleted = completedExercises.has(exerciseId);
-                  
-                  return (
-                    <div key={index} className={`exercise-item ${isCompleted ? 'completed' : ''} ${isLocked ? 'locked' : ''}`}>
-                      <div className="exercise-checkbox-container">
-                        <input
-                          type="checkbox"
-                          id={exerciseId}
-                          className="exercise-checkbox"
-                          checked={isCompleted}
-                          onChange={() => toggleExerciseCompletion(exerciseId)}
-                          disabled={isLocked}
-                        />
-                        <label htmlFor={exerciseId} className={`checkbox-label ${isLocked ? 'disabled' : ''}`}>
-                          <div className="checkbox-custom">
-                            <svg className="checkbox-icon" viewBox="0 0 24 24">
-                              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-                            </svg>
+              
+              {/* Completed Warmup Exercises - Show First */}
+              {warmupData.exercises.some((_, index) => completedExercises.has(`warmup_${index}`)) && (
+                <div className="exercise-list completed-exercises">
+                  <h3 className="section-subtitle completed">✅ Done</h3>
+                  {(() => {
+                    return warmupData.exercises.map((exercise, index) => {
+                      const exerciseId = `warmup_${index}`;
+                      const isCompleted = completedExercises.has(exerciseId);
+                      
+                      if (!isCompleted) return null; // Skip incomplete exercises here
+                      
+                      return (
+                        <div key={index} className="exercise-item completed">
+                          <div className="exercise-checkbox-container">
+                            <input
+                              type="checkbox"
+                              id={exerciseId}
+                              className="exercise-checkbox"
+                              checked={true}
+                              onChange={() => toggleExerciseCompletion(exerciseId)}
+                              disabled={isLocked}
+                            />
+                            <label htmlFor={exerciseId} className="checkbox-label">
+                              <div className="checkbox-custom">
+                                <svg className="checkbox-icon" viewBox="0 0 24 24">
+                                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                                </svg>
+                              </div>
+                            </label>
                           </div>
-                        </label>
-                      </div>
-                      <div className="exercise-info">
-                        <h3 className="exercise-name">{exercise.name}</h3>
-                        <p className="exercise-duration">{formatReps(exercise.reps)}</p>
-                      </div>
-                      <button 
-                        className="play-button"
-                        onClick={() => handleVideoClick(exercise.link)}
-                      >
-                        <div className="play-icon">▶</div>
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Main Workout Section */}
-            {dayData && dayData.exercises && dayData.exercises.length > 0 ? (
-              <div className="workout-section">
-                <div className="section-header">
-                  <h2>Main Workout</h2>
-                  <span className="section-count">{dayData.exercises.length} exercises</span>
+                          <div className="exercise-info">
+                            <h3 className="exercise-name">{exercise.name}</h3>
+                            <p className="exercise-duration">{formatReps(exercise.reps)}</p>
+                          </div>
+                          <button 
+                            className="play-button"
+                            onClick={() => handleVideoClick(exercise.link)}
+                          >
+                            <div className="play-icon">▶</div>
+                          </button>
+                        </div>
+                      );
+                    });
+                  })()}
                 </div>
+              )}
+              
+              {/* Remaining Warmup Exercises - Show Second */}
+              {warmupData.exercises.some((_, index) => !completedExercises.has(`warmup_${index}`)) && (
                 <div className="exercise-list">
-                  {dayData.exercises.map((exercise, index) => {
-                    const exerciseId = `main_${index}`;
+                  <h3 className="section-subtitle">Remaining</h3>
+                  {warmupData.exercises.map((exercise, index) => {
+                    const exerciseId = `warmup_${index}`;
                     const isCompleted = completedExercises.has(exerciseId);
                     
+                    if (isCompleted) return null; // Skip completed exercises here
+                    
                     return (
-                      <div key={index} className={`exercise-item ${isCompleted ? 'completed' : ''} ${isLocked ? 'locked' : ''}`}>
+                      <div key={index} className={`exercise-item ${isLocked ? 'locked' : ''}`}>
                         <div className="exercise-checkbox-container">
                           <input
                             type="checkbox"
                             id={exerciseId}
                             className="exercise-checkbox"
-                            checked={isCompleted}
+                            checked={false}
                             onChange={() => toggleExerciseCompletion(exerciseId)}
                             disabled={isLocked}
                           />
@@ -498,6 +486,108 @@ const WorkoutDetailPage = () => {
                     );
                   })}
                 </div>
+              )}
+            </div>
+
+            {/* Main Workout Section */}
+            {dayData && dayData.exercises && dayData.exercises.length > 0 ? (
+              <div className="workout-section">
+                <div className="section-header">
+                  <h2>Main Workout</h2>
+                  <span className="section-count">{dayData.exercises.length} exercises</span>
+                </div>
+                
+                {/* Completed Main Exercises - Show First */}
+                {dayData.exercises.some((_, index) => completedExercises.has(`main_${index}`)) && (
+                  <div className="exercise-list completed-exercises">
+                    <h3 className="section-subtitle completed">✅ Done</h3>
+                    {(() => {
+                      return dayData.exercises.map((exercise, index) => {
+                        const exerciseId = `main_${index}`;
+                        const isCompleted = completedExercises.has(exerciseId);
+                        
+                        if (!isCompleted) return null; // Skip incomplete exercises here
+                        
+                        return (
+                          <div key={index} className="exercise-item completed">
+                            <div className="exercise-checkbox-container">
+                              <input
+                                type="checkbox"
+                                id={exerciseId}
+                                className="exercise-checkbox"
+                                checked={true}
+                                onChange={() => toggleExerciseCompletion(exerciseId)}
+                                disabled={isLocked}
+                              />
+                              <label htmlFor={exerciseId} className="checkbox-label">
+                                <div className="checkbox-custom">
+                                  <svg className="checkbox-icon" viewBox="0 0 24 24">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                                  </svg>
+                                </div>
+                              </label>
+                            </div>
+                            <div className="exercise-info">
+                              <h3 className="exercise-name">{exercise.name}</h3>
+                              <p className="exercise-duration">{formatReps(exercise.reps)}</p>
+                            </div>
+                            <button 
+                              className="play-button"
+                              onClick={() => handleVideoClick(exercise.link)}
+                            >
+                              <div className="play-icon">▶</div>
+                            </button>
+                          </div>
+                        );
+                      });
+                    })()}
+                  </div>
+                )}
+                
+                {/* Remaining Main Exercises - Show Second */}
+                {dayData.exercises.some((_, index) => !completedExercises.has(`main_${index}`)) && (
+                  <div className="exercise-list">
+                    <h3 className="section-subtitle">Remaining</h3>
+                    {dayData.exercises.map((exercise, index) => {
+                      const exerciseId = `main_${index}`;
+                      const isCompleted = completedExercises.has(exerciseId);
+                      
+                      if (isCompleted) return null; // Skip completed exercises here
+                      
+                      return (
+                        <div key={index} className={`exercise-item ${isLocked ? 'locked' : ''}`}>
+                          <div className="exercise-checkbox-container">
+                            <input
+                              type="checkbox"
+                              id={exerciseId}
+                              className="exercise-checkbox"
+                              checked={false}
+                              onChange={() => toggleExerciseCompletion(exerciseId)}
+                              disabled={isLocked}
+                            />
+                            <label htmlFor={exerciseId} className={`checkbox-label ${isLocked ? 'disabled' : ''}`}>
+                              <div className="checkbox-custom">
+                                <svg className="checkbox-icon" viewBox="0 0 24 24">
+                                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                                </svg>
+                              </div>
+                            </label>
+                          </div>
+                          <div className="exercise-info">
+                            <h3 className="exercise-name">{exercise.name}</h3>
+                            <p className="exercise-duration">{formatReps(exercise.reps)}</p>
+                          </div>
+                          <button 
+                            className="play-button"
+                            onClick={() => handleVideoClick(exercise.link)}
+                          >
+                            <div className="play-icon">▶</div>
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             ) : (
               <div className="rest-day-section">
@@ -517,7 +607,7 @@ const WorkoutDetailPage = () => {
               </div>
             )}
           </>
-        ) : null}
+        )}
       </div>
     </div>
   );

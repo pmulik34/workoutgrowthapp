@@ -186,11 +186,11 @@ const HomeScreen = ({ userData }) => {
           </button>
           <button className="action-btn anime-btn" onClick={() => handleNavigateTo('/diet')}>
             <span className="btn-icon">🥗</span>
-            <span className="btn-text">Nutrition Guide</span>
+            <span className="btn-text">GlowUp</span>
           </button>
           <button className="action-btn anime-btn" onClick={() => handleNavigateTo('/profile')}>
             <span className="btn-icon">👤</span>
-            <span className="btn-text">Hero Profile</span>
+            <span className="btn-text">Warrior Profile</span>
           </button>
         </div>
       </div>

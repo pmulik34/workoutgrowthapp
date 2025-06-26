@@ -1,11 +1,13 @@
 .progress-page {
-  background: url('../assets/levi.png') center center/cover no-repeat, var(--bg-primary);
+  background: url('../assets/zoro-bg.png') center center/cover no-repeat, var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;
   font-family: 'Poppins', sans-serif;
-  padding: 2rem 1.5rem;
+  padding: 1.5rem;
   padding-bottom: 8rem; /* Space for bottom navigation */
   position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .progress-page::before {
@@ -488,11 +490,276 @@
   gap: 0.5rem;
 }
 
+/* Progress Page Header */
+.progress-page-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.progress-page-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+  letter-spacing: 0.5px;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-green));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.progress-page-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Time-based Progress Section */
+.time-progress-section {
+  background: transparent;
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(10px);
+}
+
+.time-progress-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 15, 0.6);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.time-progress-section > * {
+  position: relative;
+  z-index: 1;
+}
+
+.time-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.time-progress-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.time-frame-selector {
+  display: flex;
+  gap: 0.5rem;
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  padding: 0.3rem;
+  border: 1px solid var(--border-color);
+}
+
+.time-frame-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.time-frame-btn.active {
+  background: var(--accent-blue);
+  color: white;
+  box-shadow: 0 2px 8px 0 rgba(0,212,255,0.3);
+}
+
+.time-frame-btn:hover:not(.active) {
+  background: rgba(255,255,255,0.1);
+  color: var(--text-primary);
+}
+
+.time-frame-icon {
+  font-size: 1rem;
+}
+
+.time-frame-label {
+  font-size: 0.85rem;
+}
+
+.time-progress-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.time-progress-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.time-progress-bar-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.time-progress-bar {
+  width: 100%;
+  height: 12px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  position: relative;
+}
+
+.time-progress-fill {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.8s ease-in-out, background-color 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.time-progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  animation: shimmer 2s infinite;
+}
+
+.time-progress-text {
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* Progress Tips Section */
+.progress-tips-section {
+  background: transparent;
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(10px);
+}
+
+.progress-tips-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 15, 0.6);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.progress-tips-section > * {
+  position: relative;
+  z-index: 1;
+}
+
+.progress-tips-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 1.5rem 0;
+  letter-spacing: 0.5px;
+}
+
+.progress-tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.tip-card {
+  padding: 1.2rem;
+  background: rgba(255,255,255,0.02);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  transition: all 0.2s ease;
+}
+
+.tip-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px 0 rgba(0,0,0,0.1);
+  border-color: var(--accent-blue);
+}
+
+.tip-icon {
+  font-size: 2rem;
+  margin-bottom: 0.8rem;
+  display: block;
+}
+
+.tip-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+  line-height: 1.3;
+}
+
+.tip-description {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   .progress-page {
-    padding: 1.5rem 1rem;
-    padding-bottom: 7rem;
+    padding: 1rem;
+  }
+  
+  .progress-page-title {
+    font-size: 1.8rem;
+  }
+  
+  .progress-page-subtitle {
+    font-size: 1rem;
+  }
+  
+  .time-progress-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .time-frame-selector {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .time-progress-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .progress-tips-grid {
+    grid-template-columns: 1fr;
   }
   
   .greeting-section h1 {
@@ -570,17 +837,24 @@
 
 @media (max-width: 480px) {
   .progress-page {
-    padding: 1rem 0.8rem;
-    padding-bottom: 7rem;
+    padding: 0.8rem;
   }
   
-  .greeting-section h1 {
-    font-size: 2rem;
+  .progress-page-title {
+    font-size: 1.6rem;
   }
   
-  .stats-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+  .time-frame-btn {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.8rem;
+  }
+  
+  .time-frame-icon {
+    font-size: 0.9rem;
+  }
+  
+  .time-frame-label {
+    font-size: 0.8rem;
   }
   
   .stat-card {

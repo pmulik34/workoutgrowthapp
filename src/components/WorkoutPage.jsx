@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useProgress } from './ProgressContext';
 import './WorkoutPage.css';
 import { workoutData } from '../WorkoutData.js';
 
@@ -15,6 +16,7 @@ import erenFullbodyImg from '../assets/eren-fullbody.png';
 
 const WorkoutPage = ({ userData }) => {
   const navigate = useNavigate();
+  const { getTodayProgress, getDayProgress } = useProgress();
 
   // Get current day
   const currentDay = new Date().toLocaleDateString('en-US', { weekday: 'long' });
@@ -47,7 +49,7 @@ const WorkoutPage = ({ userData }) => {
     } else if (name.includes('hang') || name.includes('hold')) {
       return 'Endurance Test';
     } else {
-      return 'Hero Strength';
+      return 'Warrior Strength';
     }
   };
 
@@ -117,6 +119,54 @@ const WorkoutPage = ({ userData }) => {
     navigate(`/workout/${currentDay.toLowerCase()}`);
   };
 
+  // Get progress status for a specific day
+  const getDayProgressStatus = (day) => {
+    const dayData = workoutData[day];
+    
+    // Don't show progress for rest/recovery days
+    if (dayData?.type === 'recovery') {
+      return null;
+    }
+    
+    // For current day, use today's actual progress
+    if (day === currentDay) {
+      if (todayProgress.total === 0) return null;
+      
+      const percentage = (todayProgress.completed / todayProgress.total) * 100;
+      return {
+        completed: todayProgress.completed,
+        total: todayProgress.total,
+        percentage: Math.round(percentage)
+      };
+    }
+    
+    // For other days, calculate based on the date
+    const today = new Date();
+    const currentDayName = today.toLocaleDateString('en-US', { weekday: 'long' });
+    const workoutDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+    const todayIndex = workoutDays.indexOf(currentDayName);
+    const selectedDayIndex = workoutDays.indexOf(day);
+    
+    // Calculate the date for the selected day
+    const selectedDate = new Date(today);
+    selectedDate.setDate(today.getDate() + (selectedDayIndex - todayIndex));
+    
+    const dayKey = selectedDate.toISOString().slice(0, 10); // YYYY-MM-DD format
+    const progress = getDayProgress(dayKey);
+    
+    if (progress.total === 0) return null;
+    
+    const percentage = (progress.completed / progress.total) * 100;
+    return {
+      completed: progress.completed,
+      total: progress.total,
+      percentage: Math.round(percentage)
+    };
+  };
+
+  // Get today's progress
+  const todayProgress = getTodayProgress();
+
   return (
     <div className="workout-page">
       {/* Greeting Section */}
@@ -146,7 +196,10 @@ const WorkoutPage = ({ userData }) => {
       <div className="weekly-exercises">
         <h2>Weekly Training Schedule</h2>
         <div className="exercise-cards-container">
-          {getAllDays().map((day) => (
+          {getAllDays().map((day) => {
+            const progressStatus = getDayProgressStatus(day);
+            
+            return (
             <div 
               key={day} 
               className={`exercise-card ${day === currentDay ? 'current-day' : ''}`}
@@ -160,13 +213,47 @@ const WorkoutPage = ({ userData }) => {
                     <h4>{day}</h4>
                     <p className="exercise-card-type">{getDayWorkoutSummary(day)}</p>
                   </div>
+                    {progressStatus && (
+                      <div className="exercise-progress-indicator">
+                        <div
+                          className="progress-circle"
+                          style={{
+                            background: `conic-gradient(
+                              #4da3ff 0 ${progressStatus.percentage * 3.6}deg,
+                              #e0e0e0 ${progressStatus.percentage * 3.6}deg 360deg
+                            )`
+                          }}
+                        />
+                      </div>
+                    )}
                 </div>
                 <div className="exercise-card-details">
-                  <span className="exercise-count">{workoutData[day]?.exercises?.length || 0} challenges</span>
+                    <span className="exercise-count">
+                      {(() => {
+                        const dayData = workoutData[day];
+                        const warmupData = workoutData.Warmup;
+                        
+                        // Check if it's a rest/recovery day
+                        if (dayData?.type === 'recovery') {
+                          return 'Rest Day';
+                        }
+                        
+                        const mainExercises = dayData?.exercises?.length || 0;
+                        const warmupExercises = warmupData?.exercises?.length || 0;
+                        const totalExercises = mainExercises + warmupExercises;
+                        return `${totalExercises} challenges`;
+                      })()}
+                      {progressStatus && (
+                        <span className="progress-count">
+                          {progressStatus.completed}/{progressStatus.total} completed
+                        </span>
+                      )}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

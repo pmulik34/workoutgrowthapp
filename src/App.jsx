@@ -8,6 +8,7 @@ import DietPage from './components/DietPage';
 import ProgressPage from './components/ProgressPage';
 import ProfilePage from './components/ProfilePage';
 import BottomNavigation from './components/BottomNavigation';
+import { ProgressProvider } from './components/ProgressContext';
 import './App.css';
 
 // Utility function to clear all data (for testing)
@@ -93,8 +94,8 @@ function App() {
         ...appData.user,
         ...userData
       }
-    };
-    
+  };
+
     setAppData(updatedData);
     localStorage.setItem('workoutAppData', JSON.stringify(updatedData));
   };
@@ -116,6 +117,7 @@ function App() {
   }
 
   return (
+    <ProgressProvider>
     <Router>
       <div className="app">
         <div className="app-main-content">
@@ -125,8 +127,8 @@ function App() {
             <Route path="/workout" element={<WorkoutPage userData={appData?.user} />} />
             <Route path="/workout/:day" element={<WorkoutDetailPage />} />
             <Route path="/diet" element={<DietPage />} />
-            <Route path="/progress" element={<ProgressPage userData={appData?.user} />} />
-            <Route path="/profile" element={<ProfilePage userData={appData?.user} onUpdateUser={updateUserData} />} />
+            <Route path="/progress" element={<ProgressPage />} />
+              <Route path="/profile" element={<ProfilePage userData={appData?.user} onUpdateUser={updateUserData} />} />
             {/* Catch all route - redirect to home */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
@@ -134,6 +136,7 @@ function App() {
         <BottomNavigation />
       </div>
     </Router>
+    </ProgressProvider>
   );
 }
 
