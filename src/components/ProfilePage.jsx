@@ -219,7 +219,6 @@ const ProfilePage = ({ userData, onUpdateUser }) => {
         <p className="tagline">Your legendary journey and achievements!</p>
         <div className="anime-quote">
           <p>"The greatest glory in living lies not in never falling, but in rising every time we fall."</p>
-          <span className="quote-author">- Nelson Mandela</span>
         </div>
       </div>
 
@@ -465,7 +464,7 @@ const ProfilePage = ({ userData, onUpdateUser }) => {
       </div>
 
       {/* Temporary Splash Screen Test Button */}
-      <div className="test-section" style={{ marginTop: '2rem', textAlign: 'center' }}>
+      {/* <div className="test-section" style={{ marginTop: '2rem', textAlign: 'center' }}>
         <h3 style={{ color: '#fbbf24', marginBottom: '1rem' }}>🧪 Test Features</h3>
         <button 
           className="anime-btn glow-effect" 
@@ -486,7 +485,7 @@ const ProfilePage = ({ userData, onUpdateUser }) => {
         <p style={{ fontSize: '0.9rem', color: '#b8d6c5', marginTop: '0.5rem' }}>
           Click to test the new Goku Super Saiyan splash screen
         </p>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -111,7 +111,6 @@ const HomeScreen = ({ userData }) => {
         <p className="welcome-text">Your epic training journey continues!</p>
         <div className="anime-quote" style={{background:'transparent'}}>
           <p>"The difference between the impossible and the possible lies in determination."</p>
-          <span className="quote-author">- Tommy Lasorda</span>
         </div>
       </div>
 

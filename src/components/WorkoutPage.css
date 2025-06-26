@@ -74,7 +74,7 @@
 /* Today's Workout Widget */
 .todays-workout-widget {
   position: relative;
-  height: 220px;
+  height: 240px;
   border-radius: 20px;
   overflow: hidden;
   margin-bottom: 2.5rem;
@@ -83,14 +83,17 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 2rem;
-  box-shadow: var(--shadow);
-  transition: all 0.3s ease;
+  padding: 1.8rem;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(74, 222, 128, 0.3);
+  transition: all 0.4s ease;
+  border: 3px solid var(--accent-green);
+  background: linear-gradient(135deg, rgba(74, 222, 128, 0.1) 0%, rgba(45, 90, 45, 0.1) 100%);
 }
 
 .todays-workout-widget:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-glow);
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 30px rgba(74, 222, 128, 0.3);
+  border-color: var(--accent-blue);
 }
 
 .todays-workout-widget::before {
@@ -102,11 +105,28 @@
   bottom: 0;
   background: linear-gradient(
     135deg,
-    rgba(10, 10, 15, 0.8) 0%,
-    rgba(26, 26, 46, 0.5) 50%,
-    rgba(10, 10, 15, 0.9) 100%
+    rgba(10, 10, 15, 0.7) 0%,
+    rgba(26, 26, 46, 0.4) 50%,
+    rgba(10, 10, 15, 0.8) 100%
   );
   z-index: 1;
+}
+
+.todays-workout-widget::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(74, 222, 128, 0.1) 50%, transparent 70%);
+  animation: widget-shine 3s ease-in-out infinite;
+  z-index: 1;
+}
+
+@keyframes widget-shine {
+  0%, 100% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
 }
 
 .workout-widget-content {
@@ -120,31 +140,59 @@
 
 .workout-widget-info h3 {
   font-size: 2.2rem;
-  font-weight: 800;
+  font-weight: 900;
   color: var(--text-primary);
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.8rem 0;
   text-shadow: var(--text-shadow);
-  background: var(--gradient-fire);
+  background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-blue) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  letter-spacing: 1px;
+  position: relative;
+}
+
+.workout-widget-info h3::after {
+  content: '🔥 TODAY\'S MISSION 🔥';
+  position: absolute;
+  top: -1.5rem;
+  left: 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--accent-green);
+  text-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  background: none;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: unset;
 }
 
 .workout-type-main {
   font-size: 1.3rem;
   color: var(--text-secondary);
-  margin: 0;
-  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  font-weight: 700;
   text-shadow: var(--text-shadow);
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  display: inline-block;
+  border: 1px solid rgba(74, 222, 128, 0.3);
 }
 
 .workout-duration {
   font-size: 0.9rem;
   color: #FFFFFF;
   margin: 0;
-  opacity: 0.8;
-  font-weight: 400;
+  opacity: 0.9;
+  font-weight: 500;
   font-family: 'Poppins', sans-serif;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.25rem 0.6rem;
+  border-radius: 12px;
+  display: inline-block;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .workout-widget-image {
@@ -156,7 +204,8 @@
   position: relative;
   overflow: hidden;
   border: 3px solid #FFFFFF;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  margin-bottom: 1rem;
 }
 
 .workout-widget-overlay {
@@ -165,8 +214,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(205, 251, 71, 0.3) 0%, rgba(168, 214, 58, 0.3) 100%);
-  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(74, 222, 128, 0.4) 0%, rgba(0, 212, 255, 0.4) 100%);
+  border-radius: 20px;
 }
 
 .anime-btn {
@@ -447,17 +496,38 @@
   }
   
   .todays-workout-widget {
-    height: 200px;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
+    height: 240px !important;
+    padding: 1.8rem !important;
+    margin-bottom: 2.5rem !important;
+    border-radius: 20px !important;
+    border: 3px solid var(--accent-green) !important;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(74, 222, 128, 0.3) !important;
   }
   
   .workout-widget-info h3 {
-    font-size: 1.8rem;
+    font-size: 2.2rem !important;
+  }
+  
+  .workout-widget-info h3::after {
+    font-size: 0.7rem !important;
+    top: -1.5rem !important;
   }
   
   .workout-type-main {
-    font-size: 1.1rem;
+    font-size: 1.3rem !important;
+    padding: 0.4rem 0.8rem !important;
+  }
+  
+  .workout-duration {
+    font-size: 0.9rem !important;
+    padding: 0.25rem 0.6rem !important;
+  }
+  
+  .workout-widget-image {
+    width: 100px !important;
+    height: 100px !important;
+    border-radius: 16px !important;
+    border: 3px solid #FFFFFF !important;
   }
   
   .anime-btn {
@@ -504,12 +574,38 @@
   }
   
   .todays-workout-widget {
-    height: 180px;
-    padding: 1.2rem;
+    height: 220px !important;
+    padding: 1.5rem !important;
+    margin-bottom: 2rem !important;
+    border-radius: 18px !important;
+    border: 2px solid var(--accent-green) !important;
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4), 0 0 15px rgba(74, 222, 128, 0.2) !important;
   }
   
   .workout-widget-info h3 {
-    font-size: 1.6rem;
+    font-size: 2rem !important;
+  }
+  
+  .workout-widget-info h3::after {
+    font-size: 0.65rem !important;
+    top: -1.2rem !important;
+  }
+  
+  .workout-type-main {
+    font-size: 1.2rem !important;
+    padding: 0.3rem 0.7rem !important;
+  }
+  
+  .workout-duration {
+    font-size: 0.85rem !important;
+    padding: 0.2rem 0.5rem !important;
+  }
+  
+  .workout-widget-image {
+    width: 90px !important;
+    height: 90px !important;
+    border-radius: 14px !important;
+    border: 2px solid #FFFFFF !important;
   }
   
   .anime-btn {

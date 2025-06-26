@@ -142,7 +142,6 @@ const ProfilePage = ({ userData, onUpdateUser }) => {
         <p className="tagline">Your legendary journey and achievements!</p>
         <div className="anime-quote">
           <p>"The greatest glory in living lies not in never falling, but in rising every time we fall."</p>
-          <span className="quote-author">- Nelson Mandela</span>
         </div>
       </div>
 

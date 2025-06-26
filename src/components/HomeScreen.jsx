@@ -115,7 +115,6 @@ const HomeScreen = ({ userData }) => {
         <p className="welcome-text">Your epic training journey continues!</p>
         <div className="anime-quote" style={{background:'transparent'}}>
           <p>"The difference between the impossible and the possible lies in determination."</p>
-          <span className="quote-author">- Tommy Lasorda</span>
         </div>
       </div>
 
@@ -170,7 +169,7 @@ const HomeScreen = ({ userData }) => {
       </div>
 
       {/* Quick Actions */}
-      <div className="quick-actions-section">
+      {/* <div className="quick-actions-section">
         <h2>Training Grounds</h2>
         <div className="actions-grid">
           <button 
@@ -217,7 +216,7 @@ const HomeScreen = ({ userData }) => {
             </div>
           </button>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
