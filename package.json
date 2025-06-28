@@ -1,9 +1,12 @@
 {
+  "homepage": "https://pmulik34.github.io/workoutgrowthapp",
   "name": "workoutgrowthapp",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "deploy": "gh-pages -d dist",
+    "predeploy": "npm run build",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
